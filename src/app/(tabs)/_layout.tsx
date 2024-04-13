@@ -36,23 +36,19 @@ export default function TabLayout() {
           fontWeight: 'bold',
           paddingBottom:5
         },
-        // Disable the static render of the header on web
-        // to prevent a hydration error in React Navigation v6.
-        headerShown: useClientOnlyValue(false, true),
+        headerShown: false,
       }}>
       <Tabs.Screen
-        name="Home"
+        name="index"
         options={{
           title: `الرئيسية`,
           tabBarIcon: () => <TabBarIcon name="home" color={'#fff'} />,
-          headerShown: false,
         }}
       />
       <Tabs.Screen
         name="PrayerTimes"
         options={{
           title: 'أوقات الصلاة',
-          headerShown: false,
           tabBarIcon: () => <TabBarIcon name="clock-o" color={'#fff'} />,
         }}
       />

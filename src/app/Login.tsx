@@ -10,18 +10,22 @@ import {
 import Logo from "@assets/images/Group.png";
 import {LinearGradient} from 'expo-linear-gradient';
 import { useState } from "react";
+import { useLogin } from "./providers/LoginProvider";
 
 
-export default function ModalScreen() {
+export default function Login() {
 
   const [userLogged, setUserLogged]= useState(false);
+  const { loggedin , changeLogin } = useLogin()
 
   const handleTyping = (input: string) =>{
     if(input != ''){
       setUserLogged(true)
     }
   }
-
+  const handleLogin = ()=>{
+    userLogged ? changeLogin(true) : alert("not logged in");
+  }
   return (
     <LinearGradient colors={['#3EC0E9','#347589']} style={styles.container}>
       <View style={[styles.logoContainer, styles.boxShadow]}>
@@ -35,7 +39,7 @@ export default function ModalScreen() {
       <TextInput style={[styles.textInput, styles.boxShadow]} placeholder="كلمة السر" placeholderTextColor={'grey'}></TextInput>
         
         <LinearGradient colors={['#2D7A93','#1E596B','#1C4D5C']} style={[styles.button,styles.boxShadow]}>
-        <Link href={userLogged? "/(tabs)/Home": "/"} >
+        <Link onPress={()=> handleLogin()} href={userLogged? "/(tabs)/": "/"} >
 
           <Text style={styles.buttonText}>تسجيل الدخول</Text>
           </Link>
@@ -105,7 +109,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 50,
     borderRadius: 25,
-    width:200, 
+    width:200,
   },
   buttonText:{
     fontFamily: "CairoRegular",

@@ -5,11 +5,14 @@ interface PrayerTimes {
 }
 export interface neededPrayerTimes {
   [Salah: string]: string | null;
-
+}
+export interface neededDate{
+  [date: string]: string | null
 }
 
-export const PrayerTimes= ()=>{
+export const PrayerTimes = () => {
   const [prayerTimes, setPrayerTimes] = useState<PrayerTimes>();
+  const [date,setDate] = useState()
 
   useEffect(() => {
     const fetchPrayerTimes = async () => {
@@ -22,6 +25,7 @@ export const PrayerTimes= ()=>{
         }
         const data = await response.json();
         setPrayerTimes(data.data.timings);
+        setDate(data.data.date)
       } catch (error) {}
     };
     fetchPrayerTimes();
@@ -29,20 +33,27 @@ export const PrayerTimes= ()=>{
   }, []);
 
   const neededPrayerTimes: neededPrayerTimes = {
-    "Fajr": prayerTimes? prayerTimes["Fajr"]: null,
-    "Duhr": prayerTimes? prayerTimes["Dhuhr"]: null,
-    "Asr": prayerTimes? prayerTimes["Asr"]: null,
-    "Maghrib": prayerTimes? prayerTimes["Maghrib"]: null,
-    "Ishaa": prayerTimes? prayerTimes["Isha"]: null,
+    Fajr: prayerTimes ? prayerTimes["Fajr"] : null,
+    Dhuhr: prayerTimes ? prayerTimes["Dhuhr"] : null,
+    Asr: prayerTimes ? prayerTimes["Asr"] : null,
+    Maghrib: prayerTimes ? prayerTimes["Maghrib"] : null,
+    Isha: prayerTimes ? prayerTimes["Isha"] : null,
   };
 
-  return neededPrayerTimes
-}
+  const neededDate: neededDate ={
+    weekDay: date ? date["hijri"]["weekday"]["ar"] : null,
+    hijriDay:date ? date["hijri"]["day"] : null,
+    hijriMonth:date ? date["hijri"]["month"]["ar"] : null,
+    hijriYear:date ? date["hijri"]["year"] : null,
+    gregorianDate:date ? date["readable"]: null,
+  }
+
+  return [neededPrayerTimes, neededDate];
+};
 
 const NextPrayer = (): [string | null, string] => {
-
-const neededPrayerTimes:neededPrayerTimes =PrayerTimes();
- function getCurrentTimeInMinutes(): number {
+  const neededPrayerTimes: neededPrayerTimes = PrayerTimes()[0];
+  function getCurrentTimeInMinutes(): number {
     const now = new Date();
     const hours = now.getHours();
     const minutes = now.getMinutes();
@@ -75,8 +86,34 @@ const neededPrayerTimes:neededPrayerTimes =PrayerTimes();
       nextPrayerName = value;
     }
   });
-  const output:[string | null, string] = [neededPrayerTimes[nextPrayerName], nextPrayerName]
-  return output ;
+  
+let  arabicNextPrayerName = "";
+
+  switch (nextPrayerName) {
+    case "Dhuhr":
+      arabicNextPrayerName = "الظهر";
+      break;
+    case "Asr":
+      arabicNextPrayerName = "العصر";
+      break;
+    case "Maghrib":
+      arabicNextPrayerName = "المغرب";
+      break;
+    case "Fajr":
+      arabicNextPrayerName = "الفجر";
+      break;
+    case "Isha":
+      arabicNextPrayerName = "العشاء";
+      break;
+    default:
+      break;
+  }
+
+  const output: [string | null, string] = [
+    neededPrayerTimes[nextPrayerName],
+    arabicNextPrayerName,
+  ];
+  return output;
 };
 
 export default NextPrayer;

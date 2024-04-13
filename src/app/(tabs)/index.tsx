@@ -1,15 +1,19 @@
-import { StyleSheet, Text, View, Pressable, Platform, Alert } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Pressable,
+  Platform,
+  Alert,
+} from "react-native";
 import { useState, useEffect } from "react";
 import { AntDesign, FontAwesome } from "@expo/vector-icons";
-import { Link } from "expo-router";
-import PrayerTimesFetcher from "../Hooks/PrayerTimesFetcher";
-import NextPrayer from '../Functions/NextPrayer'
+import { Link, Redirect, router } from "expo-router";
+import NextPrayer from "../Functions/NextPrayer";
 import { LinearGradient } from "expo-linear-gradient";
-// import EditScreenInfo from "@Components/EditScreenInfo";
-// import { ReactNode } from "react";
-
 import db from "../db/firestore";
 import { doc, setDoc, getDoc } from "firebase/firestore";
+import { useLogin } from "../providers/LoginProvider";
 
 interface prayersDone {
   [salah: string]: {
@@ -17,21 +21,32 @@ interface prayersDone {
   };
 }
 
-function CheckMark(){
-  return(
+function CheckMark() {
+  return (
     <View style={styles.checkMarkBackground}>
-              <AntDesign style={styles.checkMark} name="check" size={24} color="black" />
-              </View>
-  )
+      <AntDesign
+        style={styles.checkMark}
+        name="check"
+        size={24}
+        color="black"
+      />
+    </View>
+  );
 }
+
+export const username: string = "محمد سيد";
 
 export default function HomeScreen(this: any) {
 
-  const [nextPrayerTime, nextPrayerName]= NextPrayer()
+  const { loggedin , changeLogin } = useLogin()
 
-  const [remainingHours,remainingMinutes]= timeRemaning(nextPrayerTime)
-  
-  const username: string = "محمد";
+  if (!loggedin) {
+    return <Redirect href="../Login" />;
+  }
+
+  const [nextPrayerTime, nextPrayerName] = NextPrayer();
+
+  const [remainingHours, remainingMinutes] = timeRemaning(nextPrayerTime);
 
   const [prayersDone, setPrayersDone] = useState<prayersDone>({
     fajr: {
@@ -61,15 +76,14 @@ export default function HomeScreen(this: any) {
     },
   });
 
-  const [showSave, setShowSave] = useState(false)
+  const [showSave, setShowSave] = useState(false);
 
   async function getData() {
     const docSnap = await getDoc(doc(db, "PrayersDone", "prayers"));
     if (docSnap.exists()) {
       setPrayersDone(docSnap.data());
     } else {
-      // docSnap.data() will be undefined in this case
-      alert("couldn't find data");
+      alert("خطأ في استعادة البيانات");
     }
   }
 
@@ -91,33 +105,35 @@ export default function HomeScreen(this: any) {
         [type]: !prayersDone[salah][type],
       },
     });
-    setShowSave(true)
+    setShowSave(true);
   };
 
   const handleSavePrayers = () => {
-    if(Platform.OS == "android"){
-      Alert.alert('تأكيد الحفظ', 'هل تريد الحفظ ؟', [
+    if (Platform.OS == "android") {
+      Alert.alert("تأكيد الحفظ", "هل تريد الحفظ ؟", [
         {
-          text: 'Cancel',
-          onPress:()=>{},
-          style: 'cancel',
+          text: "لا",
+          onPress: () => {},
+          style: "cancel",
         },
-        {text: 'OK', onPress: () => {
-          storeData(prayersDone, "PrayersDone");
-          setShowSave(false)
-        }},
+        {
+          text: "نعم",
+          onPress: () => {
+            storeData(prayersDone, "PrayersDone");
+            setShowSave(false);
+          },
+        },
       ]);
-    }
-    else if(confirm("هل تريد الحفظ ؟")){
+    } else if (confirm("هل تريد الحفظ ؟")) {
       storeData(prayersDone, "PrayersDone");
-          setShowSave(false)
+      setShowSave(false);
     }
-    }
+  };
 
   return (
-    <LinearGradient colors={['#3EC0E9','#347589']} style={styles.container}>
+    <LinearGradient colors={["#3EC0E9", "#347589"]} style={styles.container}>
       <View style={styles.header}>
-        <Link href="/modal" asChild>
+        <Link href="/Account" asChild>
           <Pressable>
             {({ pressed }) => (
               <FontAwesome
@@ -134,10 +150,12 @@ export default function HomeScreen(this: any) {
         </Link>
         <Text style={styles.welcome}>اهلا بك، {username}</Text>
       </View>
-      <Text style={styles.heading}>الصلاة القادمة</Text>
+      <Text style={[styles.heading,{marginTop: 40,}]}>الصلاة القادمة</Text>
       <View style={styles.whiteContainer}>
         <Text style={styles.containerHeading}>صلاة، {nextPrayerName}</Text>
-        <Text style={styles.timeRemaining}>الوقت المتبقي: {remainingHours} ساعة و {remainingMinutes} دقيقة</Text>
+        <Text style={styles.timeRemaining}>
+          الوقت المتبقي: {remainingHours} ساعة و {remainingMinutes} دقيقة
+        </Text>
       </View>
       <Text style={styles.heading}>جدول متابعة الصلاة</Text>
       <View style={styles.table}>
@@ -179,25 +197,19 @@ export default function HomeScreen(this: any) {
             onPress={() => handleChangePrayer("fajr", "jamaah")}
             style={styles.tableCell}
           >
-            {prayersDone.fajr.jamaah && (
-              <CheckMark/>
-            )}
+            {prayersDone.fajr.jamaah && <CheckMark />}
           </Pressable>
           <Pressable
             style={styles.tableCell}
             onPress={() => handleChangePrayer("fajr", "fard")}
           >
-            {prayersDone.fajr.fard && (
-              <CheckMark/>
-            )}
+            {prayersDone.fajr.fard && <CheckMark />}
           </Pressable>
           <Pressable
             style={[styles.tableCell, styles.lastCol]}
             onPress={() => handleChangePrayer("fajr", "kadaa")}
           >
-            {prayersDone.fajr.kadaa && (
-              <CheckMark/>
-            )}
+            {prayersDone.fajr.kadaa && <CheckMark />}
           </Pressable>
         </View>
         <View style={styles.tableRow}>
@@ -208,25 +220,19 @@ export default function HomeScreen(this: any) {
             style={styles.tableCell}
             onPress={() => handleChangePrayer("duhr", "jamaah")}
           >
-            {prayersDone.duhr.jamaah && (
-              <CheckMark/>
-            )}
+            {prayersDone.duhr.jamaah && <CheckMark />}
           </Pressable>
           <Pressable
             style={styles.tableCell}
             onPress={() => handleChangePrayer("duhr", "fard")}
           >
-            {prayersDone.duhr.fard && (
-              <CheckMark/>
-            )}
+            {prayersDone.duhr.fard && <CheckMark />}
           </Pressable>
           <Pressable
             style={[styles.tableCell, styles.lastCol]}
             onPress={() => handleChangePrayer("duhr", "kadaa")}
           >
-            {prayersDone.duhr.kadaa && (
-              <CheckMark/>
-            )}
+            {prayersDone.duhr.kadaa && <CheckMark />}
           </Pressable>
         </View>
         <View style={styles.tableRow}>
@@ -237,25 +243,19 @@ export default function HomeScreen(this: any) {
             style={styles.tableCell}
             onPress={() => handleChangePrayer("asr", "jamaah")}
           >
-            {prayersDone.asr.jamaah && (
-              <CheckMark/>
-            )}
+            {prayersDone.asr.jamaah && <CheckMark />}
           </Pressable>
           <Pressable
             style={styles.tableCell}
             onPress={() => handleChangePrayer("asr", "fard")}
           >
-            {prayersDone.asr.fard && (
-              <CheckMark/>
-            )}
+            {prayersDone.asr.fard && <CheckMark />}
           </Pressable>
           <Pressable
             style={[styles.tableCell, styles.lastCol]}
             onPress={() => handleChangePrayer("asr", "kadaa")}
           >
-            {prayersDone.asr.kadaa && (
-              <CheckMark/>
-            )}
+            {prayersDone.asr.kadaa && <CheckMark />}
           </Pressable>
         </View>
         <View style={styles.tableRow}>
@@ -266,25 +266,19 @@ export default function HomeScreen(this: any) {
             style={styles.tableCell}
             onPress={() => handleChangePrayer("maghrib", "jamaah")}
           >
-            {prayersDone.maghrib.jamaah && (
-              <CheckMark/>
-            )}
+            {prayersDone.maghrib.jamaah && <CheckMark />}
           </Pressable>
           <Pressable
             style={styles.tableCell}
             onPress={() => handleChangePrayer("maghrib", "fard")}
           >
-            {prayersDone.maghrib.fard && (
-              <CheckMark/>
-            )}
+            {prayersDone.maghrib.fard && <CheckMark />}
           </Pressable>
           <Pressable
             style={[styles.tableCell, styles.lastCol]}
             onPress={() => handleChangePrayer("maghrib", "kadaa")}
           >
-            {prayersDone.maghrib.kadaa && (
-              <CheckMark/>
-            )}
+            {prayersDone.maghrib.kadaa && <CheckMark />}
           </Pressable>
         </View>
         <View style={styles.tableRow}>
@@ -302,57 +296,83 @@ export default function HomeScreen(this: any) {
             style={[styles.tableCell, styles.lastRow]}
             onPress={() => handleChangePrayer("ishaa", "jamaah")}
           >
-            {prayersDone.ishaa.jamaah && (
-              <CheckMark/>
-            )}
+            {prayersDone.ishaa.jamaah && <CheckMark />}
           </Pressable>
           <Pressable
             style={[styles.tableCell, styles.lastRow]}
             onPress={() => handleChangePrayer("ishaa", "fard")}
           >
-            {prayersDone.ishaa.fard && (
-              <CheckMark/>
-            )}
+            {prayersDone.ishaa.fard && <CheckMark />}
           </Pressable>
           <Pressable
             style={[
               styles.tableCell,
-              styles.bottomLeftCell,
               styles.lastCol,
               styles.lastRow,
+              styles.bottomLeftCell,
             ]}
             onPress={() => handleChangePrayer("ishaa", "kadaa")}
           >
-            {prayersDone.ishaa.kadaa && (
-              <CheckMark/>
-            )}
+            {prayersDone.ishaa.kadaa && <CheckMark />}
           </Pressable>
         </View>
       </View>
-      {showSave && <Pressable onPress={handleSavePrayers}>
-        <LinearGradient
-          colors={["#2D7A93", "#1E596B", "#1C4D5C"]}
-          style={[styles.button, styles.boxShadow]}
-        >
-          <Text style={styles.buttonText}>save</Text>
-        </LinearGradient>
-      </Pressable>}
+      {showSave && (
+        <Pressable onPress={handleSavePrayers}>
+          <LinearGradient
+            colors={["#2D7A93", "#1E596B", "#1C4D5C"]}
+            style={[styles.button, styles.boxShadow]}
+          >
+            <Text style={styles.buttonText}>save</Text>
+          </LinearGradient>
+        </Pressable>
+      )}
     </LinearGradient>
   );
+}
+
+function timeRemaning(nextPrayerTime: string | null) {
+  const timeString: string | null = nextPrayerTime
+    ? nextPrayerTime.toString()
+    : null;
+
+  let prayerTime = timeString?.split(":");
+
+  let now = new Date();
+  let currentHour = now.getHours();
+  let currentMinute = now.getMinutes();
+
+  let remainingHours = Number(prayerTime ? prayerTime[0] : null) - currentHour;
+  let remainingMinutes =
+    Number(prayerTime ? prayerTime[1] : null) - currentMinute;
+
+  if (remainingHours < 0) {
+    remainingHours += 24;
+  }
+
+  if (remainingMinutes < 0) {
+    remainingHours -= 1;
+    remainingMinutes += 60;
+  }
+
+  return [remainingHours, remainingMinutes];
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "flex-start",
+    justifyContent: "space-around",
     backgroundColor: "#3789A3",
+    padding: 20,
+    paddingTop: 40,
   },
   header: {
+    position: "absolute",
+    top: 0,
+    marginTop: 40,
     width: "100%",
     flexDirection: "row",
-    marginTop: 40,
-    paddingHorizontal: 25,
     alignItems: "center",
     justifyContent: "space-between",
   },
@@ -374,7 +394,7 @@ const styles = StyleSheet.create({
     margin: 20,
     padding: 25,
     borderRadius: 25,
-    width: 320,
+    width: "100%",
   },
   containerHeading: {
     fontSize: 30,
@@ -386,16 +406,12 @@ const styles = StyleSheet.create({
     marginTop: 15,
     fontFamily: "CairoRegular",
   },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: "80%",
-  },
   table: {
     marginTop: 20,
+    width:"100%",
   },
   tableCell: {
-    width: 80,
+    width: "25%",
     height: 50,
     backgroundColor: "white",
     borderColor: "black",
@@ -409,15 +425,15 @@ const styles = StyleSheet.create({
     fontFamily: "CairoRegular",
     fontWeight: "600",
   },
-  checkMarkBackground:{
-    width:'100%',
-    height:'100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#6FBDD6'
+  checkMarkBackground: {
+    width: "100%",
+    height: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#6FBDD6",
   },
-  checkMark:{
-    color: 'white',
+  checkMark: {
+    color: "white",
     fontSize: 40,
   },
 
@@ -451,6 +467,7 @@ const styles = StyleSheet.create({
   },
   bottomLeftCell: {
     borderBottomStartRadius: 25,
+    overflow: "hidden",
   },
   boxShadow: {
     shadowColor: "black",
@@ -476,30 +493,3 @@ const styles = StyleSheet.create({
     color: "white",
   },
 });
-
-
-function timeRemaning(nextPrayerTime: string | null){
-  const timeString:string | null = nextPrayerTime?  nextPrayerTime.toString(): null;
-
-  let prayerTime= timeString?.split(":");
-
-
-  let now = new Date();
-  let currentHour = now.getHours();
-  let currentMinute = now.getMinutes();
-
-  let remainingHours= Number(prayerTime ? prayerTime[0] : null) - currentHour;
-  let remainingMinutes= Number(prayerTime ? prayerTime[1] : null) - currentMinute;
-
-
-  if(remainingHours < 0){
-    remainingHours += 24;
-  }
-
-  if(remainingMinutes < 0){
-    remainingHours -= 1;
-    remainingMinutes += 60
-  }
-
-  return [remainingHours,remainingMinutes]
-}
