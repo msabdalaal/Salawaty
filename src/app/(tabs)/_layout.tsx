@@ -53,9 +53,10 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="FollowTable"
+        name="FollowTableScreen"
         options={{
           title: 'جدول المتابعة',
+          headerShown: false,
           tabBarIcon: () => <TabBarIcon name="table" color={'#fff'} />,
         }}
       />

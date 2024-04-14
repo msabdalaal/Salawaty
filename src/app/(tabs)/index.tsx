@@ -12,16 +12,17 @@ import { Link, Redirect, router } from "expo-router";
 import NextPrayer from "../Functions/NextPrayer";
 import { LinearGradient } from "expo-linear-gradient";
 import db from "../db/firestore";
-import { doc, setDoc, getDoc } from "firebase/firestore";
+import { doc, setDoc, getDoc,addDoc, collection  } from "firebase/firestore";
 import { useLogin } from "../providers/LoginProvider";
 
-interface prayersDone {
+export interface prayersDone {
   [salah: string]: {
     [type: string]: boolean;
-  };
+    
+  },
 }
 
-function CheckMark() {
+export function CheckMark() {
   return (
     <View style={styles.checkMarkBackground}>
       <AntDesign
@@ -78,8 +79,13 @@ export default function HomeScreen(this: any) {
 
   const [showSave, setShowSave] = useState(false);
 
+  const Month = new Date().getMonth() + 1
+            const Year = new Date().getFullYear()
+            const Day = new Date().getDate()
+            const today = `${Year}/${Month}/${Day}`
+
   async function getData() {
-    const docSnap = await getDoc(doc(db, "PrayersDone", "prayers"));
+    const docSnap = await getDoc(doc(db, `${today}`, "prayers"));
     if (docSnap.exists()) {
       setPrayersDone(docSnap.data());
     } else {
@@ -92,7 +98,7 @@ export default function HomeScreen(this: any) {
   }, []);
 
   async function storeData(data: object, dataName: string) {
-    await setDoc(doc(db, dataName, "prayers"), data);
+    await setDoc(doc(db, dataName,"prayers"), data);
   }
 
   const handleChangePrayer = (salah: any, type: any) => {
@@ -119,13 +125,15 @@ export default function HomeScreen(this: any) {
         {
           text: "نعم",
           onPress: () => {
-            storeData(prayersDone, "PrayersDone");
+            
+            storeData(prayersDone, `${today}`);
             setShowSave(false);
           },
         },
       ]);
     } else if (confirm("هل تريد الحفظ ؟")) {
-      storeData(prayersDone, "PrayersDone");
+
+      storeData(prayersDone, `${today}`);
       setShowSave(false);
     }
   };
@@ -363,7 +371,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "space-around",
-    backgroundColor: "#3789A3",
     padding: 20,
     paddingTop: 40,
   },
