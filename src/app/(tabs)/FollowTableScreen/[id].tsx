@@ -13,26 +13,34 @@ const DayDetailScreen = () => {
       jamaah: false,
       fard: false,
       kadaa: false,
+      done: false,
     },
     duhr: {
       jamaah: false,
       fard: false,
       kadaa: false,
+      done: false,
     },
     asr: {
       jamaah: false,
       fard: false,
       kadaa: false,
+      done: false,
     },
     maghrib: {
       jamaah: false,
       fard: false,
       kadaa: false,
+      done: false,
     },
     ishaa: {
       jamaah: false,
       fard: false,
       kadaa: false,
+      done: false,
+    },
+    dayDone: {
+      isDone: false
     },
   });
 

@@ -18,7 +18,6 @@ import { useLogin } from "../providers/LoginProvider";
 export interface prayersDone {
   [salah: string]: {
     [type: string]: boolean;
-    
   },
 }
 
@@ -54,26 +53,34 @@ export default function HomeScreen(this: any) {
       jamaah: false,
       fard: false,
       kadaa: false,
+      done: false,
     },
     duhr: {
       jamaah: false,
       fard: false,
       kadaa: false,
+      done: false,
     },
     asr: {
       jamaah: false,
       fard: false,
       kadaa: false,
+      done: false,
     },
     maghrib: {
       jamaah: false,
       fard: false,
       kadaa: false,
+      done: false,
     },
     ishaa: {
       jamaah: false,
       fard: false,
       kadaa: false,
+      done: false,
+    },
+    dayDone: {
+      isDone: false
     },
   });
 
@@ -102,7 +109,7 @@ export default function HomeScreen(this: any) {
   }
 
   const handleChangePrayer = (salah: any, type: any) => {
-    setPrayersDone({
+    const data:prayersDone = {
       ...prayersDone,
       [salah]: {
         jamaah: false,
@@ -110,7 +117,25 @@ export default function HomeScreen(this: any) {
         kadaa: false,
         [type]: !prayersDone[salah][type],
       },
-    });
+    }
+    if(data[salah]["jamaah"] || data[salah]["fard"] || data[salah]["false"] ){
+      data[salah]["done"] = true;
+    }else{
+      data[salah]["done"] = false;
+    }
+
+    if( data["fajr"]["done"] &&
+    data["duhr"]["done"] &&
+    data["asr"]["done"] &&
+    data["maghrib"]["done"] &&
+    data["ishaa"]["done"] 
+  ){
+    data["dayDone"]["isDone"] = true;
+  }else{
+    data["dayDone"]["isDone"] = false;
+  }
+
+    setPrayersDone(data);
     setShowSave(true);
   };
 

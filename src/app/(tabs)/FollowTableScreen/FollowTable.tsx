@@ -9,7 +9,8 @@ import { SetStateAction } from "react";
 
 import * as Progress from 'react-native-progress';
 
-export default function TabTwoScreen() {
+export default function FollowTableScreen() {
+
   const Month = new Date().getMonth() + 1;
   const Year = new Date().getFullYear();
   const Day = new Date().getDate();
