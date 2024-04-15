@@ -89,7 +89,7 @@ export default function HomeScreen(this: any) {
     if (docSnap.exists()) {
       setPrayersDone(docSnap.data());
     } else {
-      alert("خطأ في استعادة البيانات");
+      // alert("خطأ في استعادة البيانات");
     }
   }
 

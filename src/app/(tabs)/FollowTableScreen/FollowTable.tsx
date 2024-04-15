@@ -4,11 +4,10 @@ import { LinearGradient } from "expo-linear-gradient";
 import { Link, Stack, router } from "expo-router";
 import { FontAwesome } from "@expo/vector-icons";
 import { username } from "..";
-import DatePicker, {
-  getFormatedDate,
-  getToday,
-} from "react-native-modern-datepicker";
-import { SetStateAction, useState } from "react";
+import DatePicker from "react-native-modern-datepicker";
+import { SetStateAction } from "react";
+
+import * as Progress from 'react-native-progress';
 
 export default function TabTwoScreen() {
   const Month = new Date().getMonth() + 1;
@@ -24,6 +23,8 @@ export default function TabTwoScreen() {
   return (
     <LinearGradient colors={["#3EC0E9", "#347589"]} style={styles.container}>
       <Stack.Screen options={{ headerShown: false }} />
+      <Text style={styles.heading}>جدول متابعة الصلاة</Text>
+
       <View style={styles.header}>
         <Link href="/Account" asChild>
           <Pressable>
@@ -52,6 +53,9 @@ export default function TabTwoScreen() {
           onDateChange={(date) => handleSelectDate(date)}
         />
       </View>
+      <Text style={[styles.heading,{fontSize:20, marginTop:20,}]}>المواظبة على الصلاة هذا الشهر</Text>
+      <Text style={[styles.heading,{fontSize:20}]}>3/30</Text>
+      <Progress.Bar progress={3/30} style={styles.progress} width={350} height={20} color="#3DB3D8" unfilledColor="#fff" borderColor="#fff"  />
     </LinearGradient>
   );
 }
@@ -74,6 +78,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
   },
+  heading: {
+    fontSize: 30,
+    color: "white",
+    fontFamily: "CairoRegular",
+    fontWeight: "600",
+  },
   welcome: {
     fontSize: 20,
     alignSelf: "flex-end",
@@ -82,6 +92,7 @@ const styles = StyleSheet.create({
     color: "white",
   },
   followTable: {
+    marginTop:20,
     width: 350,
     height: 400,
     borderRadius: 25,
@@ -91,5 +102,9 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
     fontSize: 20,
+  },
+  progress:{
+    borderRadius: 25,
+    marginTop: 20,
   }
 });

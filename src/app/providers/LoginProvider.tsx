@@ -11,7 +11,7 @@ export const LoginContext = createContext<LoginType>({
 });
 
 const LoginProvider = ({ children }: PropsWithChildren) => {
-  const [loggedin, setLoggedin] = useState<boolean>(false);
+  const [loggedin, setLoggedin] = useState<boolean>(true);
 
   const changeLogin = (state: boolean) => {
     setLoggedin(state);
