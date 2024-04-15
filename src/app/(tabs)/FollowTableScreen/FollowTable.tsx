@@ -5,16 +5,45 @@ import { Link, Stack, router } from "expo-router";
 import { FontAwesome } from "@expo/vector-icons";
 import { username } from "..";
 import DatePicker from "react-native-modern-datepicker";
-import { SetStateAction } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 
 import * as Progress from 'react-native-progress';
+import db from "@/app/db/firestore";
+import { doc, getDoc } from "firebase/firestore";
 
 export default function FollowTableScreen() {
-
   const Month = new Date().getMonth() + 1;
   const Year = new Date().getFullYear();
   const Day = new Date().getDate();
   const today = `${Year}/${Month}/${Day}`;
+
+  let [streak,setStreak] = useState(0);
+
+  async function getData() {
+    let docSnap
+    let counter = 0
+      for(let day = Day; day > 0 ; day--){
+      docSnap = await getDoc(doc(db, `${Year}/${Month}/${day}`, "prayers"));
+    if (docSnap.exists()) {
+    
+      if(docSnap.data()["dayDone"]["isDone"] == true){
+        counter++
+      }
+    
+    } else {
+      
+    }
+    }
+     setStreak(counter)
+  }
+
+  useEffect(() => {
+    
+      getData();
+    
+
+  }, []);
+
 
   function handleSelectDate(date: SetStateAction<string>): void {
     const pageName = date.toString().slice(0, 10).split("/");
@@ -55,8 +84,8 @@ export default function FollowTableScreen() {
         />
       </View>
       <Text style={[styles.heading,{fontSize:20, marginTop:20,}]}>المواظبة على الصلاة هذا الشهر</Text>
-      <Text style={[styles.heading,{fontSize:20}]}>3/30</Text>
-      <Progress.Bar progress={3/30} style={styles.progress} width={350} height={20} color="#3DB3D8" unfilledColor="#fff" borderColor="#fff"  />
+      <Text style={[styles.heading,{fontSize:20}]}>{`${streak}/${Day}`}</Text>
+      <Progress.Bar progress={streak/Day} style={styles.progress} width={350} height={20} color="#3DB3D8" unfilledColor="#fff" borderColor="#fff"  />
     </LinearGradient>
   );
 }

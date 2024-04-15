@@ -12,13 +12,13 @@ import { Link, Redirect, router } from "expo-router";
 import NextPrayer from "../Functions/NextPrayer";
 import { LinearGradient } from "expo-linear-gradient";
 import db from "../db/firestore";
-import { doc, setDoc, getDoc,addDoc, collection  } from "firebase/firestore";
+import { doc, setDoc, getDoc, addDoc, collection } from "firebase/firestore";
 import { useLogin } from "../providers/LoginProvider";
 
 export interface prayersDone {
   [salah: string]: {
     [type: string]: boolean;
-  },
+  };
 }
 
 export function CheckMark() {
@@ -37,8 +37,7 @@ export function CheckMark() {
 export const username: string = "محمد سيد";
 
 export default function HomeScreen(this: any) {
-
-  const { loggedin , changeLogin } = useLogin()
+  const { loggedin, changeLogin } = useLogin();
 
   if (!loggedin) {
     return <Redirect href="../Login" />;
@@ -80,16 +79,16 @@ export default function HomeScreen(this: any) {
       done: false,
     },
     dayDone: {
-      isDone: false
+      isDone: false,
     },
   });
 
   const [showSave, setShowSave] = useState(false);
 
-  const Month = new Date().getMonth() + 1
-            const Year = new Date().getFullYear()
-            const Day = new Date().getDate()
-            const today = `${Year}/${Month}/${Day}`
+  const Month = new Date().getMonth() + 1;
+  const Year = new Date().getFullYear();
+  const Day = new Date().getDate();
+  const today = `${Year}/${Month}/${Day}`;
 
   async function getData() {
     const docSnap = await getDoc(doc(db, `${today}`, "prayers"));
@@ -105,11 +104,11 @@ export default function HomeScreen(this: any) {
   }, []);
 
   async function storeData(data: object, dataName: string) {
-    await setDoc(doc(db, dataName,"prayers"), data);
+    await setDoc(doc(db, dataName, "prayers"), data);
   }
 
   const handleChangePrayer = (salah: any, type: any) => {
-    const data:prayersDone = {
+    const data: prayersDone = {
       ...prayersDone,
       [salah]: {
         jamaah: false,
@@ -117,23 +116,24 @@ export default function HomeScreen(this: any) {
         kadaa: false,
         [type]: !prayersDone[salah][type],
       },
-    }
-    if(data[salah]["jamaah"] || data[salah]["fard"] || data[salah]["false"] ){
+    };
+    if (data[salah]["jamaah"] || data[salah]["fard"] || data[salah]["kadaa"]) {
       data[salah]["done"] = true;
-    }else{
+    } else {
       data[salah]["done"] = false;
     }
 
-    if( data["fajr"]["done"] &&
-    data["duhr"]["done"] &&
-    data["asr"]["done"] &&
-    data["maghrib"]["done"] &&
-    data["ishaa"]["done"] 
-  ){
-    data["dayDone"]["isDone"] = true;
-  }else{
-    data["dayDone"]["isDone"] = false;
-  }
+    if (
+      data["fajr"]["done"] &&
+      data["duhr"]["done"] &&
+      data["asr"]["done"] &&
+      data["maghrib"]["done"] &&
+      data["ishaa"]["done"]
+    ) {
+      data["dayDone"]["isDone"] = true;
+    } else {
+      data["dayDone"]["isDone"] = false;
+    }
 
     setPrayersDone(data);
     setShowSave(true);
@@ -150,14 +150,12 @@ export default function HomeScreen(this: any) {
         {
           text: "نعم",
           onPress: () => {
-            
             storeData(prayersDone, `${today}`);
             setShowSave(false);
           },
         },
       ]);
     } else if (confirm("هل تريد الحفظ ؟")) {
-
       storeData(prayersDone, `${today}`);
       setShowSave(false);
     }
@@ -183,7 +181,7 @@ export default function HomeScreen(this: any) {
         </Link>
         <Text style={styles.welcome}>اهلا بك، {username}</Text>
       </View>
-      <Text style={[styles.heading,{marginTop: 40,}]}>الصلاة القادمة</Text>
+      <Text style={[styles.heading, { marginTop: 40 }]}>الصلاة القادمة</Text>
       <View style={styles.whiteContainer}>
         <Text style={styles.containerHeading}>صلاة، {nextPrayerName}</Text>
         <Text style={styles.timeRemaining}>
@@ -440,7 +438,7 @@ const styles = StyleSheet.create({
   },
   table: {
     marginTop: 20,
-    width:"100%",
+    width: "100%",
   },
   tableCell: {
     width: "25%",
