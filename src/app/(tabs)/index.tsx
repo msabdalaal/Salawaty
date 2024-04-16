@@ -21,6 +21,7 @@ export interface prayersDone {
   };
 }
 
+
 export function CheckMark() {
   return (
     <View style={styles.checkMarkBackground}>
@@ -97,16 +98,21 @@ export default function HomeScreen(this: any) {
     } else {
       // alert("خطأ في استعادة البيانات");
     }
+    const docSnapStreak = await getDoc(doc(db, `${Year}/${Month}`));
+    if (docSnapStreak.exists()) {
+      console.log(" data from db:", docSnapStreak.data())
+    } else {
+      // alert("خطأ في استعادة البيانات");
+    }
   }
 
   useEffect(() => {
     getData();
   }, []);
 
-  async function storeData(data: object, dataName: string) {
-    await setDoc(doc(db, dataName, "prayers"), data);
+  async function storeData(data: object, dataPath: string) {
+    await setDoc(doc(db, dataPath, "prayers"), data);
   }
-
   const handleChangePrayer = (salah: any, type: any) => {
     const data: prayersDone = {
       ...prayersDone,
@@ -506,7 +512,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.5,
   },
   button: {
-    position: "relative",
+    position: "absolute",
     top: -370,
     right: -160,
     backgroundColor: "#1E596B",
@@ -523,3 +529,5 @@ const styles = StyleSheet.create({
     color: "white",
   },
 });
+
+

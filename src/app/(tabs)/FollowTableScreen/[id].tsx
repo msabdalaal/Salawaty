@@ -65,7 +65,7 @@ const DayDetailScreen = () => {
   }, []);
 
     function goBack() {
-        router.replace('/FollowTableScreen/FollowTable');
+        router.back();
     }
 
   return (

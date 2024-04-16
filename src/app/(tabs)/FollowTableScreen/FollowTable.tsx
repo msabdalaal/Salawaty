@@ -18,6 +18,7 @@ export default function FollowTableScreen() {
   const today = `${Year}/${Month}/${Day}`;
 
   let [streak,setStreak] = useState(0);
+  let [loading,setLoading] = useState(true);
 
   async function getData() {
     let docSnap
@@ -34,6 +35,7 @@ export default function FollowTableScreen() {
       
     }
     }
+    setLoading(false)
      setStreak(counter)
   }
 
@@ -85,7 +87,8 @@ export default function FollowTableScreen() {
       </View>
       <Text style={[styles.heading,{fontSize:20, marginTop:20,}]}>المواظبة على الصلاة هذا الشهر</Text>
       <Text style={[styles.heading,{fontSize:20}]}>{`${streak}/${Day}`}</Text>
-      <Progress.Bar progress={streak/Day} style={styles.progress} width={350} height={20} color="#3DB3D8" unfilledColor="#fff" borderColor="#fff"  />
+      {loading ? <Progress.Bar indeterminate progress={streak/Day} style={styles.progress} width={350} height={20} color="#3DB3D8" unfilledColor="#fff" borderColor="#fff"  />
+      :<Progress.Bar  progress={streak/Day} style={styles.progress} width={350} height={20} color="#3DB3D8" unfilledColor="#fff" borderColor="#fff"  />}
     </LinearGradient>
   );
 }
