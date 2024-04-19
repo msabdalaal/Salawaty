@@ -79,9 +79,9 @@ export default function HomeScreen(this: any) {
       kadaa: false,
       done: false,
     },
-    dayDone: {
+    dayDone:{
       isDone: false,
-    },
+    }
   });
 
   const [showSave, setShowSave] = useState(false);
@@ -95,12 +95,6 @@ export default function HomeScreen(this: any) {
     const docSnap = await getDoc(doc(db, `${today}`, "prayers"));
     if (docSnap.exists()) {
       setPrayersDone(docSnap.data());
-    } else {
-      // alert("خطأ في استعادة البيانات");
-    }
-    const docSnapStreak = await getDoc(doc(db, `${Year}/${Month}`));
-    if (docSnapStreak.exists()) {
-      console.log(" data from db:", docSnapStreak.data())
     } else {
       // alert("خطأ في استعادة البيانات");
     }
