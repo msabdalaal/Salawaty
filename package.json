@@ -14,11 +14,13 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^14.0.0",
+    "@react-native-async-storage/async-storage": "^1.23.1",
     "@react-navigation/native": "^6.0.2",
     "expo": "^50.0.17",
     "expo-constants": "~15.4.6",
     "expo-device": "~5.9.4",
     "expo-font": "~11.10.3",
+    "expo-image-picker": "~14.7.1",
     "expo-linear-gradient": "~12.7.2",
     "expo-linking": "~6.2.2",
     "expo-notifications": "~0.27.7",
@@ -27,7 +29,7 @@
     "expo-status-bar": "~1.11.1",
     "expo-system-ui": "~2.9.4",
     "expo-web-browser": "~12.8.2",
-    "firebase": "^10.11.0",
+    "firebase": "^10.6.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-native": "0.73.6",
@@ -42,6 +44,26 @@
     "react-native-screens": "~3.29.0",
     "react-native-storage": "^1.0.1",
     "react-native-web": "~0.19.6"
+  },
+  "pkg": {
+    "patches": {
+      "./node_modules/undici/lib/fetch/body.js": [
+        "require('stream/web')",
+        "require('stream').web"
+      ],
+      "./node_modules/undici/lib/core/util.js": [
+        "require('stream/web')",
+        "require('stream').web"
+      ],
+      "./node_modules/undici/lib/fetch/request.js": [
+        "require('stream/web')",
+        "require('stream').web"
+      ],
+      "./node_modules/undici/lib/fetch/index.js": [
+        "require('stream/web')",
+        "require('stream').web"
+      ]
+    }
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

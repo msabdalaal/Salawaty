@@ -22,7 +22,8 @@ import NextPrayer, {
 } from "@Functions/NextPrayer";
 import { Link } from "expo-router";
 import { FontAwesome } from "@expo/vector-icons";
-import { username } from "./index";
+import Header from "@Components/Header";
+// import { username } from "./index";
 
 interface Prayer {
   icon: ImageSourcePropType;
@@ -76,24 +77,7 @@ export default function PrayerTimesScreen() {
 
   return (
     <LinearGradient colors={["#3EC0E9", "#347589"]} style={styles.container}>
-      <View style={styles.header}>
-        <Link href="/Account" asChild>
-          <Pressable>
-            {({ pressed }) => (
-              <FontAwesome
-                name="user-circle"
-                size={30}
-                style={{
-                  marginRight: 15,
-                  opacity: pressed ? 0.5 : 1,
-                  color: "white",
-                }}
-              />
-            )}
-          </Pressable>
-        </Link>
-        <Text style={styles.welcome}>اهلا بك، {username}</Text>
-      </View>
+      <Header/>
       <Text style={styles.heading}>أوقات الصلاة</Text>
       <View style={styles.date}>
         <Text style={styles.dateText}>{neededDate["weekDay"]}</Text>

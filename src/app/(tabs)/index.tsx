@@ -7,20 +7,20 @@ import {
   Alert,
 } from "react-native";
 import { useState, useEffect } from "react";
-import { AntDesign, FontAwesome } from "@expo/vector-icons";
-import { Link, Redirect, router } from "expo-router";
+import { AntDesign } from "@expo/vector-icons";
+import { Redirect } from "expo-router";
 import NextPrayer from "../Functions/NextPrayer";
 import { LinearGradient } from "expo-linear-gradient";
 import db from "../db/firestore";
-import { doc, setDoc, getDoc, addDoc, collection } from "firebase/firestore";
+import { doc, setDoc, getDoc } from "firebase/firestore";
 import { useLogin } from "../providers/LoginProvider";
+import Header from "@Components/Header";
 
 export interface prayersDone {
   [salah: string]: {
     [type: string]: boolean;
   };
 }
-
 
 export function CheckMark() {
   return (
@@ -35,19 +35,11 @@ export function CheckMark() {
   );
 }
 
-export const username: string = "محمد سيد";
-
 export default function HomeScreen(this: any) {
-  const { loggedin, changeLogin } = useLogin();
-
-  if (!loggedin) {
-    return <Redirect href="../Login" />;
-  }
+  const { loggedin } = useLogin();
 
   const [nextPrayerTime, nextPrayerName] = NextPrayer();
-
   const [remainingHours, remainingMinutes] = timeRemaning(nextPrayerTime);
-
   const [prayersDone, setPrayersDone] = useState<prayersDone>({
     fajr: {
       jamaah: false,
@@ -79,9 +71,9 @@ export default function HomeScreen(this: any) {
       kadaa: false,
       done: false,
     },
-    dayDone:{
+    dayDone: {
       isDone: false,
-    }
+    },
   });
 
   const [showSave, setShowSave] = useState(false);
@@ -103,6 +95,7 @@ export default function HomeScreen(this: any) {
   useEffect(() => {
     getData();
   }, []);
+
 
   async function storeData(data: object, dataPath: string) {
     await setDoc(doc(db, dataPath, "prayers"), data);
@@ -144,8 +137,7 @@ export default function HomeScreen(this: any) {
       Alert.alert("تأكيد الحفظ", "هل تريد الحفظ ؟", [
         {
           text: "لا",
-          onPress: () => {},
-          style: "cancel",
+          style: "destructive",
         },
         {
           text: "نعم",
@@ -161,26 +153,14 @@ export default function HomeScreen(this: any) {
     }
   };
 
+
+  if(!loggedin){
+    return <Redirect href="../Login" />
+  }
+
   return (
     <LinearGradient colors={["#3EC0E9", "#347589"]} style={styles.container}>
-      <View style={styles.header}>
-        <Link href="/Account" asChild>
-          <Pressable>
-            {({ pressed }) => (
-              <FontAwesome
-                name="user-circle"
-                size={30}
-                style={{
-                  marginRight: 15,
-                  opacity: pressed ? 0.5 : 1,
-                  color: "white",
-                }}
-              />
-            )}
-          </Pressable>
-        </Link>
-        <Text style={styles.welcome}>اهلا بك، {username}</Text>
-      </View>
+      <Header/>
       <Text style={[styles.heading, { marginTop: 40 }]}>الصلاة القادمة</Text>
       <View style={styles.whiteContainer}>
         <Text style={styles.containerHeading}>صلاة، {nextPrayerName}</Text>
@@ -397,22 +377,6 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingTop: 40,
   },
-  header: {
-    position: "absolute",
-    top: 0,
-    marginTop: 40,
-    width: "100%",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  welcome: {
-    fontSize: 20,
-    alignSelf: "flex-end",
-    fontFamily: "CairoRegular",
-    fontWeight: "600",
-    color: "white",
-  },
   heading: {
     fontSize: 30,
     color: "white",
@@ -523,5 +487,3 @@ const styles = StyleSheet.create({
     color: "white",
   },
 });
-
-

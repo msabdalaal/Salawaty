@@ -1,19 +1,66 @@
 import { Alert, Platform, Pressable, StyleSheet } from "react-native";
-import { Text, View } from "@/components/Themed";
+import { Text, View, Image, TextInput } from "react-native";
 import { Stack, router } from "expo-router";
 import { FontAwesome } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
-import React from "react";
+import React, { useState } from "react";
 import { useLogin } from "./providers/LoginProvider";
+import * as ImagePicker from "expo-image-picker";
+import { Auth, getAuth, updateProfile, signOut  } from "firebase/auth";
+
+interface Result {
+  "assets": [
+    {
+      "assetId": string,
+      "base64": null,
+      "duration": null,
+      "exif": null,
+      "fileName": string,
+      "fileSize": number,
+      "height": number,
+      "type": string,
+      "uri": string,
+      "width": number
+    }
+  ],
+  "canceled": boolean,
+}
 
 export default function ModalScreen() {
-  const { loggedin, changeLogin } = useLogin();
+
+  const { displayName, profilePic,changeProfilePic,changeDisplayName, changeLogin } = useLogin();
+  const [changing, setChanging]=useState(false)
+  const [username, setUsername]=useState("")
+
+  const pickImage = async () => {
+    let result:ImagePicker.ImagePickerResult = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.canceled) {
+
+      changeProfilePic(result.assets[0].uri);
+
+      const auth: Auth = getAuth();
+      updateProfile(auth.currentUser!!, {
+        photoURL: result.assets[0].uri,
+      }).then(() => {
+      }).catch((error) => {
+        Alert.alert("Error",error.message)
+      });
+    }
+    
+  };
 
   function goBack() {
     router.back();
   }
   function logOut() {
-
     if (Platform.OS == "android") {
       Alert.alert("تسجيل الخروج", "هل تريد تسجيل الخروج ؟", [
         {
@@ -24,6 +71,12 @@ export default function ModalScreen() {
         {
           text: "نعم",
           onPress: () => {
+            const auth = getAuth();
+            signOut(auth).then(() => {
+              
+            }).catch((error) => {
+              // An error happened.
+            });
             changeLogin(false);
             router.push("/");
           },
@@ -35,6 +88,21 @@ export default function ModalScreen() {
     }
   }
 
+  function changeUserName(): void {
+    setChanging(true)
+  }
+
+  function handleChangeUserName(){
+    const auth: Auth = getAuth();
+    updateProfile(auth.currentUser!!, {
+      displayName: username,
+    }).then(() => {
+    changeDisplayName(username)
+      setChanging(false)
+    }).catch((error) => {
+      Alert.alert("Error",error.message)
+    });
+  }
   return (
     <LinearGradient colors={["#3EC0E9", "#347589"]} style={styles.container}>
       <Stack.Screen
@@ -45,15 +113,26 @@ export default function ModalScreen() {
         }}
       />
       <View style={styles.header}>
-      <Pressable onPress={() => goBack()}>
-      {({ pressed }) => (
-              <FontAwesome style={[styles.goBack, {opacity: pressed? 0.5 : 1}]}  name="arrow-left" />
-            )}
-        
-      </Pressable>
-        <FontAwesome name="user-circle" style={styles.profilePic} />
+        <Pressable onPress={() => goBack()}>
+          {({ pressed }) => (
+            <FontAwesome
+              style={[styles.goBack, { opacity: pressed ? 0.5 : 1 }]}
+              name="arrow-left"
+            />
+          )}
+        </Pressable>
+        <View style={styles.profilePicContainer}>
+          <FontAwesome onPress={pickImage} style={styles.editButton} name="pencil"/>
+            {!profilePic ?<FontAwesome name="user-circle" style={styles.profilePicAlias} />
+            :<Image style={styles.profilePic} source={{ uri: profilePic ? profilePic : "" }}  />}
+        </View>
       </View>
-      <Text style={styles.username}>محمد سيد</Text>
+      <View style={styles.usernameContainer}>
+      {displayName? <Text style={styles.username}>{displayName}</Text>: <Text style={styles.username}>اسم المستخدم</Text>}
+      {!changing && <FontAwesome onPress={changeUserName} style={styles.editButton} name="pencil"/>}
+      {changing && <TextInput style={styles.changeUsernameInput} value={username} onChangeText={setUsername}/>}
+      {changing && <FontAwesome onPress={handleChangeUserName} style={styles.editButton} name="check"/>}
+      </View>
       <View style={styles.item}>
         <Pressable onPress={() => logOut()}>
           <Text style={styles.itemText}>تسجيل الخروج</Text>
@@ -78,20 +157,44 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     backgroundColor: "transparent",
   },
+  profilePicContainer:{
+    flexDirection:"row",
+    alignItems:"center",
+    gap:10,
+  },
   profilePic: {
+    height:85,
+    width:85,
+    borderRadius:99,
+  },
+  profilePicAlias:{
     fontSize: 80,
-    color: "white",
+    color:"white",
+  },
+  editButton:{
+    fontSize:20,
+    color:"white",
   },
   goBack: {
     textAlign: "left",
     color: "white",
     fontSize: 25,
   },
+  usernameContainer:{
+    flexDirection:"row-reverse",
+    alignItems:"center",
+    gap:10,
+  },
   username: {
     fontSize: 25,
     color: "white",
     fontFamily: "CairoRegular",
     fontWeight: "600",
+  },
+  changeUsernameInput:{
+    width:100,
+    height:30,
+    backgroundColor:"white",
   },
   item: {
     width: "100%",

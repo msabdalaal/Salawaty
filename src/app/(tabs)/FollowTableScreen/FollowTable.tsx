@@ -3,13 +3,13 @@ import { Text, View } from "@Components/Themed";
 import { LinearGradient } from "expo-linear-gradient";
 import { Link, Stack, router } from "expo-router";
 import { FontAwesome } from "@expo/vector-icons";
-import { username } from "..";
 import DatePicker from "react-native-modern-datepicker";
 import { SetStateAction, useEffect, useState } from "react";
 
 import * as Progress from 'react-native-progress';
 import db from "@/app/db/firestore";
 import { doc, getDoc } from "firebase/firestore";
+import Header from "@Components/Header";
 
 export default function FollowTableScreen() {
   const Month = new Date().getMonth() + 1;
@@ -56,25 +56,7 @@ export default function FollowTableScreen() {
     <LinearGradient colors={["#3EC0E9", "#347589"]} style={styles.container}>
       <Stack.Screen options={{ headerShown: false }} />
       <Text style={styles.heading}>جدول متابعة الصلاة</Text>
-
-      <View style={styles.header}>
-        <Link href="/Account" asChild>
-          <Pressable>
-            {({ pressed }) => (
-              <FontAwesome
-                name="user-circle"
-                size={30}
-                style={{
-                  marginRight: 15,
-                  opacity: pressed ? 0.5 : 1,
-                  color: "white",
-                }}
-              />
-            )}
-          </Pressable>
-        </Link>
-        <Text style={styles.welcome}>اهلا بك، {username}</Text>
-      </View>
+      <Header/>
       <View style={styles.followTable}>
         <DatePicker
           selected={today}
