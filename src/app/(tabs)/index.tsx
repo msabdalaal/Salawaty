@@ -5,6 +5,7 @@ import {
   Pressable,
   Platform,
   Alert,
+  Modal,
 } from "react-native";
 import { useState, useEffect } from "react";
 import { AntDesign } from "@expo/vector-icons";
@@ -15,6 +16,7 @@ import db from "../db/firestore";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import { useLogin } from "../providers/LoginProvider";
 import Header from "@Components/Header";
+import TimeRemaining from "@Components/TimeRemaining";
 
 export interface prayersDone {
   [salah: string]: {
@@ -35,11 +37,12 @@ export function CheckMark() {
   );
 }
 
+
+
 export default function HomeScreen(this: any) {
   const { loggedin, uid } = useLogin();
 
-  const [nextPrayerTime, nextPrayerName] = NextPrayer();
-  const [remainingHours, remainingMinutes] = timeRemaning(nextPrayerTime);
+  const  [nextPrayerTime, nextPrayerName] = NextPrayer();
   const [prayersDone, setPrayersDone] = useState<prayersDone>({
     fajr: {
       jamaah: false,
@@ -84,7 +87,7 @@ export default function HomeScreen(this: any) {
   const today = `${Year}/${Month}/${Day}`;
 
   async function getData() {
-    const docSnap = await getDoc(doc(db, `${today}`, `${uid}`));
+    const docSnap = await getDoc(doc(db, `${today}/${uid}` ));
     if (docSnap.exists()) {
       setPrayersDone(docSnap.data());
     } else {
@@ -93,8 +96,8 @@ export default function HomeScreen(this: any) {
   }
 
   useEffect(() => {
-    getData();
-  }, []);
+    if(uid) getData();
+  }, [uid]);
 
 
   async function storeData(data: object, dataPath: string) {
@@ -158,15 +161,14 @@ export default function HomeScreen(this: any) {
     return <Redirect href="../Login" />
   }
 
+
   return (
     <LinearGradient colors={["#3EC0E9", "#347589"]} style={styles.container}>
       <Header/>
       <Text style={[styles.heading, { marginTop: 40 }]}>الصلاة القادمة</Text>
       <View style={styles.whiteContainer}>
         <Text style={styles.containerHeading}>صلاة، {nextPrayerName}</Text>
-        <Text style={styles.timeRemaining}>
-          الوقت المتبقي: {remainingHours} ساعة و {remainingMinutes} دقيقة
-        </Text>
+        <TimeRemaining/>
       </View>
       <Text style={styles.heading}>جدول متابعة الصلاة</Text>
       <View style={styles.table}>
@@ -329,45 +331,20 @@ export default function HomeScreen(this: any) {
         </View>
       </View>
       {showSave && (
-        <Pressable onPress={handleSavePrayers}>
+        <Pressable style={[styles.buttonPosition,styles.boxShadow]} onPress={handleSavePrayers}>
           <LinearGradient
-            colors={["#2D7A93", "#1E596B", "#1C4D5C"]}
-            style={[styles.button, styles.boxShadow]}
+              colors={["#2D7A93", "#1E596B", "#1C4D5C"]}
+              style={styles.buttonStyle}
           >
             <Text style={styles.buttonText}>save</Text>
           </LinearGradient>
-        </Pressable>
+        </Pressable>     
       )}
     </LinearGradient>
   );
 }
 
-function timeRemaning(nextPrayerTime: string | null) {
-  const timeString: string | null = nextPrayerTime
-    ? nextPrayerTime.toString()
-    : null;
 
-  let prayerTime = timeString?.split(":");
-
-  let now = new Date();
-  let currentHour = now.getHours();
-  let currentMinute = now.getMinutes();
-
-  let remainingHours = Number(prayerTime ? prayerTime[0] : null) - currentHour;
-  let remainingMinutes =
-    Number(prayerTime ? prayerTime[1] : null) - currentMinute;
-
-  if (remainingHours < 0) {
-    remainingHours += 24;
-  }
-
-  if (remainingMinutes < 0) {
-    remainingHours -= 1;
-    remainingMinutes += 60;
-  }
-
-  return [remainingHours, remainingMinutes];
-}
 
 const styles = StyleSheet.create({
   container: {
@@ -469,16 +446,16 @@ const styles = StyleSheet.create({
     shadowRadius: 3,
     shadowOpacity: 0.5,
   },
-  button: {
-    position: "absolute",
-    top: -370,
-    right: -160,
-    backgroundColor: "#1E596B",
-    justifyContent: "center",
-    alignItems: "center",
-    height: 50,
+  buttonStyle: {
     borderRadius: 10,
-    width: 50,
+    padding:15,
+    alignContent:"center",
+    justifyContent: "center",
+  },
+  buttonPosition:{
+    position:"absolute",
+    top: "52%",
+    right:5,
   },
   buttonText: {
     fontFamily: "CairoRegular",

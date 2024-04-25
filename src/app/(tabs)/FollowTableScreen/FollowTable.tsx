@@ -1,4 +1,4 @@
-import { StyleSheet, Pressable } from "react-native";
+import { StyleSheet, Pressable, Dimensions } from "react-native";
 import { Text, View } from "@Components/Themed";
 import { LinearGradient } from "expo-linear-gradient";
 import { Link, Stack, router } from "expo-router";
@@ -53,8 +53,8 @@ export default function FollowTableScreen() {
     const pageName = date.toString().slice(0, 10).split("/");
     router.push(`/FollowTableScreen/${pageName}`);
   }
-
-  return (
+  const windowWidth = Dimensions.get('window').width;
+    return (
     <LinearGradient colors={["#3EC0E9", "#347589"]} style={styles.container}>
       <Stack.Screen options={{ headerShown: false }} />
       <Text style={styles.heading}>جدول متابعة الصلاة</Text>
@@ -71,8 +71,8 @@ export default function FollowTableScreen() {
       </View>
       <Text style={[styles.heading,{fontSize:20, marginTop:20,}]}>المواظبة على الصلاة هذا الشهر</Text>
       <Text style={[styles.heading,{fontSize:20}]}>{`${streak}/${Day}`}</Text>
-      {loading ? <Progress.Bar indeterminate progress={streak/Day} style={styles.progress} width={350} height={20} color="#3DB3D8" unfilledColor="#fff" borderColor="#fff"  />
-      :<Progress.Bar  progress={streak/Day} style={styles.progress} width={350} height={20} color="#3DB3D8" unfilledColor="#fff" borderColor="#fff"  />}
+      {loading ? <Progress.Bar indeterminate progress={streak/Day} width={windowWidth - 40} style={styles.progress} height={20} color="#3DB3D8" unfilledColor="#fff" borderColor="#fff"  />
+      :<Progress.Bar  progress={streak/Day} style={styles.progress} width={windowWidth - 40} height={20} color="#3DB3D8" unfilledColor="#fff" borderColor="#fff"  />}
     </LinearGradient>
   );
 }
@@ -110,8 +110,8 @@ const styles = StyleSheet.create({
   },
   followTable: {
     marginTop:20,
-    width: 350,
-    height: 400,
+    width: "100%",
+    height: 350,
     borderRadius: 25,
     overflow: "hidden",
   },
