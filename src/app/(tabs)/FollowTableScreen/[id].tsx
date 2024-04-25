@@ -6,8 +6,10 @@ import { useEffect, useState } from "react";
 import { CheckMark, prayersDone } from "..";
 import { LinearGradient } from "expo-linear-gradient";
 import { FontAwesome } from "@expo/vector-icons";
+import { useLogin } from "@/app/providers/LoginProvider";
 
 const DayDetailScreen = () => {
+  const {uid} = useLogin()
   const [prayersDone, setPrayersDone] = useState<prayersDone>({
     fajr: {
       jamaah: false,
@@ -52,7 +54,7 @@ const DayDetailScreen = () => {
   const date = `${Year}/${Month}/${Day}`;
 
   async function getData() {
-    const docSnap = await getDoc(doc(db, `${date}`, "prayers"));
+    const docSnap = await getDoc(doc(db, `${date}`, `${uid}`));
     if (docSnap.exists()) {
       setPrayersDone(docSnap.data());
     } else {

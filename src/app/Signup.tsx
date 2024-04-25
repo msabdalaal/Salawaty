@@ -12,7 +12,8 @@ import Logo from "@assets/images/Group.png";
 import {LinearGradient} from 'expo-linear-gradient';
 import { useState } from "react";
 import { useLogin } from "./providers/LoginProvider";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "@/lib/firebaseAuth";
 
 
 export default function Login() {
@@ -35,7 +36,7 @@ export default function Login() {
       setError("كلمة المرور غير متطابقة")
       return;
     }
-    const auth = getAuth();
+    
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         // Signed up 

@@ -10,8 +10,10 @@ import * as Progress from 'react-native-progress';
 import db from "@/app/db/firestore";
 import { doc, getDoc } from "firebase/firestore";
 import Header from "@Components/Header";
+import { useLogin } from "@/app/providers/LoginProvider";
 
 export default function FollowTableScreen() {
+  const {uid} = useLogin()
   const Month = new Date().getMonth() + 1;
   const Year = new Date().getFullYear();
   const Day = new Date().getDate();
@@ -24,7 +26,7 @@ export default function FollowTableScreen() {
     let docSnap
     let counter = 0
       for(let day = Day; day > 0 ; day--){
-      docSnap = await getDoc(doc(db, `${Year}/${Month}/${day}`, "prayers"));
+      docSnap = await getDoc(doc(db, `${Year}/${Month}/${day}`, `${uid}`));
     if (docSnap.exists()) {
     
       if(docSnap.data()["dayDone"]["isDone"] == true){

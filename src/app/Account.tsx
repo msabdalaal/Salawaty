@@ -6,7 +6,8 @@ import { LinearGradient } from "expo-linear-gradient";
 import React, { useState } from "react";
 import { useLogin } from "./providers/LoginProvider";
 import * as ImagePicker from "expo-image-picker";
-import { Auth, getAuth, updateProfile, signOut  } from "firebase/auth";
+import { Auth, updateProfile, signOut  } from "firebase/auth";
+import { auth } from "@/lib/firebaseAuth";
 
 interface Result {
   "assets": [
@@ -46,7 +47,6 @@ export default function ModalScreen() {
 
       changeProfilePic(result.assets[0].uri);
 
-      const auth: Auth = getAuth();
       updateProfile(auth.currentUser!!, {
         photoURL: result.assets[0].uri,
       }).then(() => {
@@ -71,7 +71,6 @@ export default function ModalScreen() {
         {
           text: "نعم",
           onPress: () => {
-            const auth = getAuth();
             signOut(auth).then(() => {
               
             }).catch((error) => {
@@ -93,7 +92,6 @@ export default function ModalScreen() {
   }
 
   function handleChangeUserName(){
-    const auth: Auth = getAuth();
     updateProfile(auth.currentUser!!, {
       displayName: username,
     }).then(() => {

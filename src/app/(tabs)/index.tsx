@@ -19,7 +19,7 @@ import Header from "@Components/Header";
 export interface prayersDone {
   [salah: string]: {
     [type: string]: boolean;
-  };
+  },
 }
 
 export function CheckMark() {
@@ -36,7 +36,7 @@ export function CheckMark() {
 }
 
 export default function HomeScreen(this: any) {
-  const { loggedin } = useLogin();
+  const { loggedin, uid } = useLogin();
 
   const [nextPrayerTime, nextPrayerName] = NextPrayer();
   const [remainingHours, remainingMinutes] = timeRemaning(nextPrayerTime);
@@ -84,7 +84,7 @@ export default function HomeScreen(this: any) {
   const today = `${Year}/${Month}/${Day}`;
 
   async function getData() {
-    const docSnap = await getDoc(doc(db, `${today}`, "prayers"));
+    const docSnap = await getDoc(doc(db, `${today}`, `${uid}`));
     if (docSnap.exists()) {
       setPrayersDone(docSnap.data());
     } else {
@@ -98,7 +98,7 @@ export default function HomeScreen(this: any) {
 
 
   async function storeData(data: object, dataPath: string) {
-    await setDoc(doc(db, dataPath, "prayers"), data);
+    await setDoc(doc(db, dataPath, `${uid}`), data);
   }
   const handleChangePrayer = (salah: any, type: any) => {
     const data: prayersDone = {

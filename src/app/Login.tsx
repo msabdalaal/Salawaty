@@ -12,7 +12,8 @@ import Logo from "@assets/images/Group.png";
 import { LinearGradient } from "expo-linear-gradient";
 import { useState } from "react";
 import { useLogin } from "./providers/LoginProvider";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "@/lib/firebaseAuth";
 
 export default function Login() {
   const {loggedin, changeLogin, changeDisplayName , changeProfilePic } = useLogin();
@@ -22,7 +23,7 @@ export default function Login() {
 
   const handleLogin = () => {
     setError("");
-    const auth = getAuth();
+    
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         // Signed in
