@@ -73,7 +73,7 @@ const NextPrayer = (): [string | null, string] => {
   const timeInMinutes = timeStringToMinutes(timeString);
 
   let nextPrayer = 0;
-  let nextPrayerName: string = "";
+  let nextPrayerName: string = "Fajr";
   let nextPrayerTime = "";
   Object.values(neededPrayerTimes).map((value, id) => {
     if (timeStringToMinutes(value || "") < currentTimeInMinutes) {
@@ -81,12 +81,16 @@ const NextPrayer = (): [string | null, string] => {
     }
   });
   nextPrayer++;
+  console.log(neededPrayerTimes);
+  
   Object.keys(neededPrayerTimes).map((value, id) => {
     if (id == nextPrayer) {
       nextPrayerName = value;
     }
   });
   
+  
+
 let  arabicNextPrayerName = "";
 
   switch (nextPrayerName) {
