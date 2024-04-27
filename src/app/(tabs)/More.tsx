@@ -1,10 +1,17 @@
-import { StyleSheet } from 'react-native';
+import { SafeAreaView, StyleSheet } from 'react-native';
 import { Text, View } from '@Components/Themed';
+import { LinearGradient } from 'expo-linear-gradient';
 
 export default function TabTwoScreen() {
   return (
-    <View style={styles.container}>
-    </View>
+    <LinearGradient colors={["#3EC0E9", "#347589"]} style={styles.container}>
+      <SafeAreaView>
+      <Text style={styles.heading}>المزيد</Text>
+      
+      </SafeAreaView>
+      
+
+    </LinearGradient>
   );
 }
 
@@ -13,5 +20,11 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  heading: {
+    fontSize: 30,
+    color: "white",
+    fontFamily: "CairoRegular",
+    fontWeight: "600",
   },
 });

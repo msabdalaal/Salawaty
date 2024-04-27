@@ -31,16 +31,18 @@ export default function  TimeRemaining()  {
 
 
     return (
-        <Text style={styles.timeRemaining}>
-        الوقت المتبقي: {hours} ساعة : {minutes} دقيقة : {seconds}
+        <><Text style={[styles.timeRemaining,{marginTop:15}]}>
+        الوقت المتبقي:</Text>
+      <Text style={[styles.timeRemaining,{textAlign:"center", fontSize:25}]}>
+      {hours} ساعة : {minutes} دقيقة : {seconds}
       </Text>
+      </>
     )
   }
 
   const styles = StyleSheet.create({
     timeRemaining: {
         fontSize: 20,
-        marginTop: 15,
         fontFamily: "CairoRegular",
       },
   })

@@ -67,7 +67,7 @@ const DayDetailScreen = () => {
   }, []);
 
     function goBack() {
-        router.back();
+        router.dismiss();
     }
 
   return (

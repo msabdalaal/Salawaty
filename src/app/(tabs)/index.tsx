@@ -167,7 +167,7 @@ export default function HomeScreen(this: any) {
           <TimeRemaining />
         </>
       ) : (
-        <Text style={styles.containerHeading}>الرجاء اختيار البلد و المدينة</Text>
+        <Text style={styles.containerHeading}>الرجاء اختيار البلد والمدينة</Text>
       )}
     </View>
       <Text style={styles.heading}>جدول متابعة الصلاة</Text>

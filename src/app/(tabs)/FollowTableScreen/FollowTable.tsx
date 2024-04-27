@@ -3,7 +3,7 @@ import { Text, View } from "@Components/Themed";
 import { LinearGradient } from "expo-linear-gradient";
 import { Link, Stack, router } from "expo-router";
 import { FontAwesome } from "@expo/vector-icons";
-import DatePicker from "react-native-modern-datepicker";
+import DatePicker,{getToday} from "react-native-modern-datepicker";
 import { SetStateAction, useEffect, useState } from "react";
 
 import * as Progress from 'react-native-progress';
@@ -18,7 +18,8 @@ export default function FollowTableScreen() {
   const Year = new Date().getFullYear();
   const Day = new Date().getDate();
   const today = `${Year}/${Month}/${Day}`;
-
+  const thisDate = getToday()
+console.log(today)
   let [streak,setStreak] = useState(0);
   let [loading,setLoading] = useState(true);
 
@@ -61,9 +62,8 @@ export default function FollowTableScreen() {
       <Header/>
       <View style={styles.followTable}>
         <DatePicker
-          selected={today}
-          current={today}
-          maximumDate={today}
+          selected={thisDate}
+          // maximumDate={thisDate}
           mode="calendar"
           style={styles.datePicker}
           onDateChange={(date) => handleSelectDate(date)}
