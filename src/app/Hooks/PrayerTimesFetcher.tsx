@@ -1,28 +1,34 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
+import { useLogin } from "../providers/LoginProvider";
 
 function PrayerTimesFetcher(): string[] | null {
   const [prayerTimes, setPrayerTimes] = useState<string[] | null>(null);
+  const { city, country } = useLogin();
 
   useEffect(() => {
-    const fetchPrayerTimes = async () => {
-      try {
-        const response = await fetch("https://api.aladhan.com/v1/timingsByAddress/today?address=Cairo,EG");
-        if (!response.ok) {
-          throw new Error('Failed to fetch data');
-        }
-        const data = await response.json();
-        setPrayerTimes(data.data.timings);
-      } catch (error) {
-      }
-    };
+    if (city) {
+      const fetchPrayerTimes = async () => {
+        try {
+          console.log(
+            `https://api.aladhan.com/v1/timingsByAddress/today?address=${city},${country}`
+          );
 
-    fetchPrayerTimes();
+          const response = await fetch(
+            `https://api.aladhan.com/v1/timingsByAddress/today?address=${city},${country}`
+          );
+          if (!response.ok) {
+            throw new Error("Failed to fetch data");
+          }
+          const data = await response.json();
+          setPrayerTimes(data.data.timings);
+        } catch (error) {}
+      };
 
-    // Cleanup function
-    return () => {
-      // Any cleanup code here, if necessary
-    };
-  }, []); // Empty dependency array means this effect will only run once, equivalent to componentDidMount
+      fetchPrayerTimes();
+
+      return () => {};
+    }
+  }, [city]);
 
   return prayerTimes;
 }

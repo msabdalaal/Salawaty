@@ -21,7 +21,7 @@ import TimeRemaining from "@Components/TimeRemaining";
 export interface prayersDone {
   [salah: string]: {
     [type: string]: boolean;
-  },
+  };
 }
 
 export function CheckMark() {
@@ -37,12 +37,10 @@ export function CheckMark() {
   );
 }
 
-
-
 export default function HomeScreen(this: any) {
-  const { loggedin, uid } = useLogin();
+  const { loggedin, uid, city } = useLogin();
 
-  const  [nextPrayerTime, nextPrayerName] = NextPrayer();
+  const [nextPrayerTime, nextPrayerName] = NextPrayer();
   const [prayersDone, setPrayersDone] = useState<prayersDone>({
     fajr: {
       jamaah: false,
@@ -87,7 +85,7 @@ export default function HomeScreen(this: any) {
   const today = `${Year}/${Month}/${Day}`;
 
   async function getData() {
-    const docSnap = await getDoc(doc(db, `${today}/${uid}` ));
+    const docSnap = await getDoc(doc(db, `${today}/${uid}`));
     if (docSnap.exists()) {
       setPrayersDone(docSnap.data());
     } else {
@@ -96,9 +94,8 @@ export default function HomeScreen(this: any) {
   }
 
   useEffect(() => {
-    if(uid) getData();
+    if (uid) getData();
   }, [uid]);
-
 
   async function storeData(data: object, dataPath: string) {
     await setDoc(doc(db, dataPath, `${uid}`), data);
@@ -156,20 +153,23 @@ export default function HomeScreen(this: any) {
     }
   };
 
-
-  if(!loggedin){
-    return <Redirect href="../Login" />
-  }
-
-
+  if (!loggedin) {
+    return <Redirect href="../Login" />;
+  }  
   return (
     <LinearGradient colors={["#3EC0E9", "#347589"]} style={styles.container}>
-      <Header/>
+      <Header />
       <Text style={[styles.heading, { marginTop: 40 }]}>الصلاة القادمة</Text>
-      <View style={styles.whiteContainer}>
-        <Text style={styles.containerHeading}>صلاة، {nextPrayerName}</Text>
-        <TimeRemaining/>
-      </View>
+        <View style={styles.whiteContainer}>
+      {city != "" ? (
+        <>
+          <Text style={styles.containerHeading}>صلاة، {nextPrayerName}</Text>
+          <TimeRemaining />
+        </>
+      ) : (
+        <Text style={styles.containerHeading}>الرجاء اختيار البلد و المدينة</Text>
+      )}
+    </View>
       <Text style={styles.heading}>جدول متابعة الصلاة</Text>
       <View style={styles.table}>
         <View style={styles.tableRow}>
@@ -180,7 +180,7 @@ export default function HomeScreen(this: any) {
               styles.topRightCell,
               styles.firstRow,
             ]}
-          >
+        >
             <Text style={[styles.cellText, styles.firstColText]}>الحالة</Text>
           </View>
           <Pressable style={[styles.tableCell, styles.firstRow]}>
@@ -331,20 +331,21 @@ export default function HomeScreen(this: any) {
         </View>
       </View>
       {showSave && (
-        <Pressable style={[styles.buttonPosition,styles.boxShadow]} onPress={handleSavePrayers}>
+        <Pressable
+          style={[styles.buttonPosition, styles.boxShadow]}
+          onPress={handleSavePrayers}
+        >
           <LinearGradient
-              colors={["#2D7A93", "#1E596B", "#1C4D5C"]}
-              style={styles.buttonStyle}
+            colors={["#2D7A93", "#1E596B", "#1C4D5C"]}
+            style={styles.buttonStyle}
           >
             <Text style={styles.buttonText}>save</Text>
           </LinearGradient>
-        </Pressable>     
+        </Pressable>
       )}
     </LinearGradient>
   );
 }
-
-
 
 const styles = StyleSheet.create({
   container: {
@@ -448,14 +449,14 @@ const styles = StyleSheet.create({
   },
   buttonStyle: {
     borderRadius: 10,
-    padding:15,
-    alignContent:"center",
+    padding: 15,
+    alignContent: "center",
     justifyContent: "center",
   },
-  buttonPosition:{
-    position:"absolute",
+  buttonPosition: {
+    position: "absolute",
     top: "52%",
-    right:5,
+    right: 5,
   },
   buttonText: {
     fontFamily: "CairoRegular",

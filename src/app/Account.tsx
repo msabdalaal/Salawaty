@@ -6,55 +6,60 @@ import { LinearGradient } from "expo-linear-gradient";
 import React, { useState } from "react";
 import { useLogin } from "./providers/LoginProvider";
 import * as ImagePicker from "expo-image-picker";
-import { Auth, updateProfile, signOut  } from "firebase/auth";
+import { Auth, updateProfile, signOut } from "firebase/auth";
 import { auth } from "@/lib/firebaseAuth";
 
 interface Result {
-  "assets": [
+  assets: [
     {
-      "assetId": string,
-      "base64": null,
-      "duration": null,
-      "exif": null,
-      "fileName": string,
-      "fileSize": number,
-      "height": number,
-      "type": string,
-      "uri": string,
-      "width": number
+      assetId: string;
+      base64: null;
+      duration: null;
+      exif: null;
+      fileName: string;
+      fileSize: number;
+      height: number;
+      type: string;
+      uri: string;
+      width: number;
     }
-  ],
-  "canceled": boolean,
+  ];
+  canceled: boolean;
 }
 
 export default function ModalScreen() {
-
-  const { displayName, profilePic,changeProfilePic,changeDisplayName, changeLogin } = useLogin();
-  const [changing, setChanging]=useState(false)
-  const [username, setUsername]=useState("")
+  const {
+    displayName,
+    profilePic,
+    changeProfilePic,
+    changeDisplayName,
+    changeLogin,
+  } = useLogin();
+  const [changing, setChanging] = useState(false);
+  const [username, setUsername] = useState("");
 
   const pickImage = async () => {
-    let result:ImagePicker.ImagePickerResult = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
+    let result: ImagePicker.ImagePickerResult =
+      await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
 
     console.log(result);
 
     if (!result.canceled) {
-
       changeProfilePic(result.assets[0].uri);
 
       updateProfile(auth.currentUser!!, {
         photoURL: result.assets[0].uri,
-      }).then(() => {
-      }).catch((error) => {
-        Alert.alert("Error",error.message)
-      });
+      })
+        .then(() => {})
+        .catch((error) => {
+          Alert.alert("Error", error.message);
+        });
     }
-    
   };
 
   function goBack() {
@@ -71,11 +76,11 @@ export default function ModalScreen() {
         {
           text: "نعم",
           onPress: () => {
-            signOut(auth).then(() => {
-              
-            }).catch((error) => {
-              // An error happened.
-            });
+            signOut(auth)
+              .then(() => {})
+              .catch((error) => {
+                // An error happened.
+              });
             changeLogin(false);
             router.push("/");
           },
@@ -88,18 +93,20 @@ export default function ModalScreen() {
   }
 
   function changeUserName(): void {
-    setChanging(true)
+    setChanging(true);
   }
 
-  function handleChangeUserName(){
+  function handleChangeUserName() {
     updateProfile(auth.currentUser!!, {
       displayName: username,
-    }).then(() => {
-    changeDisplayName(username)
-      setChanging(false)
-    }).catch((error) => {
-      Alert.alert("Error",error.message)
-    });
+    })
+      .then(() => {
+        changeDisplayName(username);
+        setChanging(false);
+      })
+      .catch((error) => {
+        Alert.alert("Error", error.message);
+      });
   }
   return (
     <LinearGradient colors={["#3EC0E9", "#347589"]} style={styles.container}>
@@ -107,6 +114,7 @@ export default function ModalScreen() {
         options={{
           title: ``,
           presentation: "modal",
+          animation:"slide_from_right",
           headerShown: false,
         }}
       />
@@ -120,16 +128,53 @@ export default function ModalScreen() {
           )}
         </Pressable>
         <View style={styles.profilePicContainer}>
-          <FontAwesome onPress={pickImage} style={styles.editButton} name="pencil"/>
-            {!profilePic ?<FontAwesome name="user-circle" style={styles.profilePicAlias} />
-            :<Image style={styles.profilePic} source={{ uri: profilePic ? profilePic : "" }}  />}
+          <FontAwesome
+            onPress={pickImage}
+            style={styles.editButton}
+            name="pencil"
+          />
+          {!profilePic ? (
+            <FontAwesome name="user-circle" style={styles.profilePicAlias} />
+          ) : (
+            <Image
+              style={styles.profilePic}
+              source={{ uri: profilePic ? profilePic : "" }}
+            />
+          )}
         </View>
       </View>
       <View style={styles.usernameContainer}>
-      {displayName? <Text style={styles.username}>{displayName}</Text>: <Text style={styles.username}>اسم المستخدم</Text>}
-      {!changing && <FontAwesome onPress={changeUserName} style={styles.editButton} name="pencil"/>}
-      {changing && <TextInput style={styles.changeUsernameInput} value={username} onChangeText={setUsername}/>}
-      {changing && <FontAwesome onPress={handleChangeUserName} style={styles.editButton} name="check"/>}
+        {displayName ? (
+          <Text style={styles.username}>{displayName}</Text>
+        ) : (
+          <Text style={styles.username}>اسم المستخدم</Text>
+        )}
+        {!changing && (
+          <FontAwesome
+            onPress={changeUserName}
+            style={styles.editButton}
+            name="pencil"
+          />
+        )}
+        {changing && (
+          <TextInput
+            style={styles.changeUsernameInput}
+            value={username}
+            onChangeText={setUsername}
+          />
+        )}
+        {changing && (
+          <FontAwesome
+            onPress={handleChangeUserName}
+            style={styles.editButton}
+            name="check"
+          />
+        )}
+      </View>
+      <View style={styles.item}>
+        <Pressable onPress={() => router.push("/ChooseCountry")}>
+          <Text style={styles.itemText}>تغيير المدينة</Text>
+        </Pressable>
       </View>
       <View style={styles.item}>
         <Pressable onPress={() => logOut()}>
@@ -155,49 +200,53 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     backgroundColor: "transparent",
   },
-  profilePicContainer:{
-    flexDirection:"row",
-    alignItems:"center",
-    gap:10,
+  profilePicContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
   },
   profilePic: {
-    height:85,
-    width:85,
-    borderRadius:99,
+    height: 85,
+    width: 85,
+    borderRadius: 99,
   },
-  profilePicAlias:{
+  profilePicAlias: {
     fontSize: 80,
-    color:"white",
+    color: "white",
   },
-  editButton:{
-    fontSize:20,
-    color:"white",
+  editButton: {
+    fontSize: 20,
+    color: "white",
   },
   goBack: {
     textAlign: "left",
     color: "white",
     fontSize: 25,
   },
-  usernameContainer:{
-    flexDirection:"row-reverse",
-    alignItems:"center",
-    gap:10,
+  usernameContainer: {
+    flexDirection: "row-reverse",
+    alignItems: "center",
+    gap: 10,
+    borderBottomWidth: 1,
+    width:"100%",
+    borderColor: "white",
+    paddingBottom: 20,
+
   },
   username: {
     fontSize: 25,
     color: "white",
     fontFamily: "CairoRegular",
     fontWeight: "600",
+    
   },
-  changeUsernameInput:{
-    width:100,
-    height:30,
-    backgroundColor:"white",
+  changeUsernameInput: {
+    width: 100,
+    height: 30,
+    backgroundColor: "white",
   },
   item: {
     width: "100%",
-    marginTop: 20,
-    borderTopWidth: 1,
     borderBottomWidth: 1,
     backgroundColor: "transparent",
     borderColor: "white",
