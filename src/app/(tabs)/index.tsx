@@ -6,6 +6,7 @@ import {
   Platform,
   Alert,
   Modal,
+  AppState,
 } from "react-native";
 import { useState, useEffect } from "react";
 import { AntDesign } from "@expo/vector-icons";
@@ -155,21 +156,23 @@ export default function HomeScreen(this: any) {
 
   if (!loggedin) {
     return <Redirect href="../Login" />;
-  }  
+  }
   return (
     <LinearGradient colors={["#3EC0E9", "#347589"]} style={styles.container}>
       <Header />
       <Text style={[styles.heading, { marginTop: 40 }]}>الصلاة القادمة</Text>
-        <View style={styles.whiteContainer}>
-      {city != "" ? (
-        <>
-          <Text style={styles.containerHeading}>صلاة، {nextPrayerName}</Text>
-          <TimeRemaining />
-        </>
-      ) : (
-        <Text style={styles.containerHeading}>الرجاء اختيار البلد والمدينة</Text>
-      )}
-    </View>
+      <View style={styles.whiteContainer}>
+        {city != "" ? (
+          <>
+            <Text style={styles.containerHeading}>صلاة، {nextPrayerName}</Text>
+            <TimeRemaining />
+          </>
+        ) : (
+          <Text style={styles.containerHeading}>
+            الرجاء اختيار البلد والمدينة
+          </Text>
+        )}
+      </View>
       <Text style={styles.heading}>جدول متابعة الصلاة</Text>
       <View style={styles.table}>
         <View style={styles.tableRow}>
@@ -180,7 +183,7 @@ export default function HomeScreen(this: any) {
               styles.topRightCell,
               styles.firstRow,
             ]}
-        >
+          >
             <Text style={[styles.cellText, styles.firstColText]}>الحالة</Text>
           </View>
           <Pressable style={[styles.tableCell, styles.firstRow]}>

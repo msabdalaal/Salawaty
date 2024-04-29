@@ -3,76 +3,90 @@ import { Text, View } from "@Components/Themed";
 import { LinearGradient } from "expo-linear-gradient";
 import { Link, Stack, router } from "expo-router";
 import { FontAwesome } from "@expo/vector-icons";
-import DatePicker,{getToday} from "react-native-modern-datepicker";
+import DatePicker from "react-native-modern-datepicker";
 import { SetStateAction, useEffect, useState } from "react";
 
-import * as Progress from 'react-native-progress';
+import * as Progress from "react-native-progress";
 import db from "@/app/db/firestore";
 import { doc, getDoc } from "firebase/firestore";
 import Header from "@Components/Header";
 import { useLogin } from "@/app/providers/LoginProvider";
 
 export default function FollowTableScreen() {
-  const {uid} = useLogin()
+  const { uid } = useLogin();
   const Month = new Date().getMonth() + 1;
   const Year = new Date().getFullYear();
   const Day = new Date().getDate();
   const today = `${Year}/${Month}/${Day}`;
-  const thisDate = getToday()
-console.log(today)
-  let [streak,setStreak] = useState(0);
-  let [loading,setLoading] = useState(true);
+  let [streak, setStreak] = useState(0);
+  let [loading, setLoading] = useState(true);
 
   async function getData() {
-    let docSnap
-    let counter = 0
-      for(let day = Day; day > 0 ; day--){
+    let docSnap;
+    let counter = 0;
+    for (let day = Day; day > 0; day--) {
       docSnap = await getDoc(doc(db, `${Year}/${Month}/${day}`, `${uid}`));
-    if (docSnap.exists()) {
-    
-      if(docSnap.data()["dayDone"]["isDone"] == true){
-        counter++
+      if (docSnap.exists()) {
+        if (docSnap.data()["dayDone"]["isDone"] == true) {
+          counter++;
+        }
+      } else {
       }
-    
-    } else {
-      
     }
-    }
-    setLoading(false)
-     setStreak(counter)
+    setLoading(false);
+    setStreak(counter);
   }
 
   useEffect(() => {
-    
-      getData();
-    
-
+    getData();
   }, []);
-
 
   function handleSelectDate(date: SetStateAction<string>): void {
     const pageName = date.toString().slice(0, 10).split("/");
     router.push(`/FollowTableScreen/${pageName}`);
   }
-  const windowWidth = Dimensions.get('window').width;
-    return (
+  const windowWidth = Dimensions.get("window").width;
+  return (
     <LinearGradient colors={["#3EC0E9", "#347589"]} style={styles.container}>
       <Stack.Screen options={{ headerShown: false }} />
       <Text style={styles.heading}>جدول متابعة الصلاة</Text>
-      <Header/>
+      <Header />
       <View style={styles.followTable}>
         <DatePicker
-          selected={thisDate}
-          // maximumDate={thisDate}
+          selected={today}
           mode="calendar"
           style={styles.datePicker}
           onDateChange={(date) => handleSelectDate(date)}
         />
       </View>
-      <Text style={[styles.heading,{fontSize:20, marginTop:20,}]}>المواظبة على الصلاة هذا الشهر</Text>
-      <Text style={[styles.heading,{fontSize:20}]}>{`${streak}/${Day}`}</Text>
-      {loading ? <Progress.Bar indeterminate progress={streak/Day} width={windowWidth - 40} style={styles.progress} height={20} color="#3DB3D8" unfilledColor="#fff" borderColor="#fff"  />
-      :<Progress.Bar  progress={streak/Day} style={styles.progress} width={windowWidth - 40} height={20} color="#3DB3D8" unfilledColor="#fff" borderColor="#fff"  />}
+      <Text style={[styles.heading, { fontSize: 20, marginTop: 20 }]}>
+        المواظبة على الصلاة هذا الشهر
+      </Text>
+      <Text
+        style={[styles.heading, { fontSize: 20 }]}
+      >{`${streak}/${Day}`}</Text>
+      {loading ? (
+        <Progress.Bar
+          indeterminate
+          progress={streak / Day}
+          width={windowWidth - 40}
+          style={styles.progress}
+          height={20}
+          color="#3DB3D8"
+          unfilledColor="#fff"
+          borderColor="#fff"
+        />
+      ) : (
+        <Progress.Bar
+          progress={streak / Day}
+          style={styles.progress}
+          width={windowWidth - 40}
+          height={20}
+          color="#3DB3D8"
+          unfilledColor="#fff"
+          borderColor="#fff"
+        />
+      )}
     </LinearGradient>
   );
 }
@@ -109,19 +123,19 @@ const styles = StyleSheet.create({
     color: "white",
   },
   followTable: {
-    marginTop:20,
+    marginTop: 20,
     width: "100%",
     height: 350,
     borderRadius: 25,
     overflow: "hidden",
   },
-  datePicker:{
+  datePicker: {
     width: "100%",
     height: "100%",
     fontSize: 20,
   },
-  progress:{
+  progress: {
     borderRadius: 25,
     marginTop: 20,
-  }
+  },
 });

@@ -77,7 +77,7 @@ export default function PrayerTimesScreen() {
 
   return (
     <LinearGradient colors={["#3EC0E9", "#347589"]} style={styles.container}>
-      <Header/>
+      <Header />
       <Text style={styles.heading}>أوقات الصلاة</Text>
       <View style={styles.date}>
         <Text style={styles.dateText}>{neededDate["weekDay"]}</Text>
@@ -154,7 +154,7 @@ const styles = StyleSheet.create({
     marginTop: 40,
   },
   date: {
-    width:"100%",
+    width: "100%",
     backgroundColor: "white",
     alignItems: "center",
     justifyContent: "center",

@@ -114,7 +114,7 @@ export default function ModalScreen() {
         options={{
           title: ``,
           presentation: "modal",
-          animation:"slide_from_right",
+          animation: "slide_from_right",
           headerShown: false,
         }}
       />
@@ -228,17 +228,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 10,
     borderBottomWidth: 1,
-    width:"100%",
+    width: "100%",
     borderColor: "white",
     paddingBottom: 20,
-
   },
   username: {
     fontSize: 25,
     color: "white",
     fontFamily: "CairoRegular",
     fontWeight: "600",
-    
   },
   changeUsernameInput: {
     width: 100,

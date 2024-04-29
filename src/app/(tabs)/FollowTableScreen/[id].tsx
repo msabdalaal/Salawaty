@@ -9,7 +9,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import { useLogin } from "@/app/providers/LoginProvider";
 
 const DayDetailScreen = () => {
-  const {uid} = useLogin()
+  const { uid } = useLogin();
   const [prayersDone, setPrayersDone] = useState<prayersDone>({
     fajr: {
       jamaah: false,
@@ -42,7 +42,7 @@ const DayDetailScreen = () => {
       done: false,
     },
     dayDone: {
-      isDone: false
+      isDone: false,
     },
   });
 
@@ -66,17 +66,19 @@ const DayDetailScreen = () => {
     getData();
   }, []);
 
-    function goBack() {
-        router.dismiss();
-    }
+  function goBack() {
+    router.dismiss();
+  }
 
   return (
     <LinearGradient colors={["#3EC0E9", "#347589"]} style={styles.container}>
       <Pressable onPress={() => goBack()} style={styles.goButton}>
-      {({ pressed }) => (
-              <FontAwesome style={[styles.goBack, {opacity: pressed? 0.5 : 1}]}  name="arrow-left" />
-            )}
-        
+        {({ pressed }) => (
+          <FontAwesome
+            style={[styles.goBack, { opacity: pressed ? 0.5 : 1 }]}
+            name="arrow-left"
+          />
+        )}
       </Pressable>
       <Stack.Screen
         options={{
@@ -221,12 +223,12 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 25,
   },
-  goButton:{
+  goButton: {
     position: "absolute",
-    width:"100%",
-    top:0,
+    width: "100%",
+    top: 0,
     left: 20,
-    marginTop:40,
+    marginTop: 40,
   },
   heading: {
     fontSize: 30,

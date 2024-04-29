@@ -21,7 +21,7 @@ export default function ChooseCountry() {
   function handleChangeCountry(country: string) {
     changeCountry(country);
     setShowCities(true);
-    setQuery("")
+    setQuery("");
   }
   function handleChangeCity(city: string) {
     changeCity(city);
@@ -47,7 +47,9 @@ export default function ChooseCountry() {
           )}
         </Pressable>
         <View>
-          <Text style={styles.title}>{!showCities? "اختار البلد" : "اختار المدينة"}</Text>
+          <Text style={styles.title}>
+            {!showCities ? "اختار البلد" : "اختار المدينة"}
+          </Text>
         </View>
       </View>
       <TextInput
@@ -59,14 +61,16 @@ export default function ChooseCountry() {
       {showCities ? (
         <FlatList
           data={country && countries[country as keyof typeof countries]}
-          renderItem={(item) => (
-            item.item.toLowerCase().match(query.toLowerCase()) && <Pressable
-              style={styles.listItem}
-              onPress={() => handleChangeCity(item.item)}
-            >
-              <Text style={styles.itemText}>{item.item}</Text>
-            </Pressable>
-          )}
+          renderItem={(item) =>
+            item.item.toLowerCase().match(query.toLowerCase()) && (
+              <Pressable
+                style={styles.listItem}
+                onPress={() => handleChangeCity(item.item)}
+              >
+                <Text style={styles.itemText}>{item.item}</Text>
+              </Pressable>
+            )
+          }
           style={styles.list}
         />
       ) : (

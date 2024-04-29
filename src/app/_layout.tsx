@@ -53,8 +53,6 @@ export default function RootLayout() {
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
 
-
-
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <LoginProvider>
@@ -63,7 +61,10 @@ function RootLayoutNav() {
           <Stack.Screen name="Login" options={{ headerShown: false }} />
           <Stack.Screen name="Signup" options={{ headerShown: false }} />
           <Stack.Screen name="Account" options={{ presentation: "modal" }} />
-          <Stack.Screen name="ChooseCountry" options={{ presentation: "modal" }} />
+          <Stack.Screen
+            name="ChooseCountry"
+            options={{ presentation: "modal" }}
+          />
         </Stack>
       </LoginProvider>
     </ThemeProvider>

@@ -14,23 +14,29 @@ import { useState } from "react";
 import { useLogin } from "./providers/LoginProvider";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/lib/firebaseAuth";
+import * as Notifications from "expo-notifications";
+import TimeRemaining, { timeRemaning } from "@Components/TimeRemaining";
+import NextPrayer from "@Functions/NextPrayer";
 
 export default function Login() {
-  const {loggedin, changeLogin, changeDisplayName , changeProfilePic } = useLogin();
+  const { loggedin, changeLogin, changeDisplayName, changeProfilePic } =
+    useLogin();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
+  const [nextPrayerTime, nextPrayerName] = NextPrayer();
+
   const handleLogin = () => {
     setError("");
-    
+
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         // Signed in
         const user = userCredential.user;
         changeLogin(true);
-        changeDisplayName(user.displayName)
-        changeProfilePic(user.photoURL)
+        changeDisplayName(user.displayName);
+        changeProfilePic(user.photoURL);
         router.push("/(tabs)");
         // ...
       })
@@ -43,17 +49,18 @@ export default function Login() {
           setError("الرجاء كتابة كلمة المرور");
         } else if (errorCode == "auth/invalid-login-credentials") {
           setError("البريد الالكتروني او كلمة المرور غير صحيحة");
-        }
-        else if (errorCode == "auth/too-many-requests") {
-          setError("لقج حاولت تسجيل الدخول مرات عديدة برجاء الانتظار والمحاولة مرة اخرى");
+        } else if (errorCode == "auth/too-many-requests") {
+          setError(
+            "لقج حاولت تسجيل الدخول مرات عديدة برجاء الانتظار والمحاولة مرة اخرى"
+          );
         }
       });
   };
   function goToSignUp(): void {
     router.push("/Signup");
   }
-  if(loggedin){
-    return <Redirect href="/" />
+  if (loggedin) {
+    return <Redirect href="/" />;
   }
   return (
     <LinearGradient colors={["#3EC0E9", "#347589"]} style={styles.container}>
