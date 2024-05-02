@@ -4,8 +4,8 @@
   "version": "1.0.0",
   "scripts": {
     "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
     "web": "expo start --web",
     "test": "jest --watchAll"
   },
@@ -13,8 +13,12 @@
     "preset": "jest-expo"
   },
   "dependencies": {
+    "@expo-google-fonts/amiri": "^0.2.3",
+    "@expo-google-fonts/el-messiri": "^0.2.3",
+    "@expo-google-fonts/inter": "^0.2.3",
     "@expo/vector-icons": "^14.0.0",
     "@react-native-async-storage/async-storage": "^1.21.0",
+    "@react-native-community/netinfo": "^11.3.1",
     "@react-navigation/native": "^6.0.2",
     "expo": "^50.0.17",
     "expo-constants": "~15.4.6",

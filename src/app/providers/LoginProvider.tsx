@@ -9,6 +9,8 @@ import {
   useState,
 } from "react";
 import db from "../db/firestore";
+import { getDataLocally, storeDataLocally } from "@Functions/localStorage";
+import NetInfo from "@react-native-community/netinfo";
 
 type LoginType = {
   loggedin: boolean;
@@ -62,12 +64,22 @@ const LoginProvider = ({ children }: PropsWithChildren) => {
   };
 
   async function getData() {
-    const docSnap = await getDoc(doc(db, `users/${uid}`));
-    if (docSnap.exists()) {
-      setCountry(docSnap.data().country);
-      setCity(docSnap.data().city);
+    const networkState = await NetInfo.fetch();
+    if (networkState.isConnected && networkState.isInternetReachable) {
+      const docSnap = await getDoc(doc(db, `users/${uid}`));
+      if (docSnap.exists()) {
+        setCountry(docSnap.data().country);
+        setCity(docSnap.data().city);
+        await storeDataLocally(docSnap.data(), "Country");
+      }
     } else {
-      // alert("خطأ في استعادة البيانات");
+      const localdata = await getDataLocally("Country");
+      if (localdata) {
+        setCountry(localdata.country);
+        setCity(localdata.city);
+      } else {
+        alert("Please connect to the internet");
+      }
     }
   }
 

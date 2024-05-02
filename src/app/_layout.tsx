@@ -4,13 +4,18 @@ import {
   DefaultTheme,
   ThemeProvider,
 } from "@react-navigation/native";
-import { useFonts } from "expo-font";
-import { Redirect, Stack } from "expo-router";
+import {
+  useFonts,
+  ElMessiri_400Regular,
+  ElMessiri_500Medium,
+  ElMessiri_600SemiBold,
+  ElMessiri_700Bold,
+} from "@expo-google-fonts/el-messiri";
+import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import { useColorScheme } from "@Components/useColorScheme";
 import LoginProvider from "./providers/LoginProvider";
-import { useLogin } from "./providers/LoginProvider";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -27,8 +32,10 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
-    CairoRegular: require("@assets/fonts/Cairo-VariableFont_slnt,wght.ttf"),
-    CairoBold: require("@assets/fonts/Cairo-Bold.ttf"),
+    Regular_Font: ElMessiri_400Regular,
+    Medium_Font: ElMessiri_500Medium,
+    semiBold_Font: ElMessiri_600SemiBold,
+    Bold_Font: ElMessiri_700Bold,
     ...FontAwesome.font,
   });
 

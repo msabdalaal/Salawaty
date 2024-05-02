@@ -58,12 +58,10 @@ export default function TimeRemaining() {
 
   return (
     <>
-      <Text style={[styles.timeRemaining, { marginTop: 15 }]}>
+      <Text style={[styles.timeRemaining, { marginTop: 20 }]}>
         الوقت المتبقي:
       </Text>
-      <Text
-        style={[styles.timeRemaining, { textAlign: "center", fontSize: 25 }]}
-      >
+      <Text style={[styles.timeRemaining, styles.timeText]}>
         {hours} ساعة : {minutes} دقيقة : {seconds}
       </Text>
     </>
@@ -73,8 +71,9 @@ export default function TimeRemaining() {
 const styles = StyleSheet.create({
   timeRemaining: {
     fontSize: 20,
-    fontFamily: "CairoRegular",
+    fontFamily: "semiBold_Font",
   },
+  timeText: { textAlign: "center", fontSize: 25, marginTop: 10 },
 });
 
 export function timeRemaning(nextPrayerTime: string | null) {
@@ -103,7 +102,7 @@ export function timeRemaning(nextPrayerTime: string | null) {
     remainingMinutes += 60;
   }
   remainingSeconds =
-    remainingMinutes == 0
+    remainingMinutes == 0 && remainingHours == 0
       ? 0
       : (remainingHours * 3600 + remainingMinutes * 60 - currentSecond) % 60;
 

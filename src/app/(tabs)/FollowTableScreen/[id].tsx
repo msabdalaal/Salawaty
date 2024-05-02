@@ -233,7 +233,7 @@ const styles = StyleSheet.create({
   heading: {
     fontSize: 30,
     color: "white",
-    fontFamily: "CairoRegular",
+    fontFamily: "Regular_Font",
     fontWeight: "600",
   },
   table: {
@@ -252,7 +252,7 @@ const styles = StyleSheet.create({
   cellText: {
     textAlign: "center",
     verticalAlign: "bottom",
-    fontFamily: "CairoRegular",
+    fontFamily: "Regular_Font",
     fontWeight: "600",
   },
   checkMarkBackground: {

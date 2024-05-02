@@ -1,12 +1,9 @@
-import EditScreenInfo from "@Components/EditScreenInfo";
 import {
   StyleSheet,
   Text,
   View,
   Image,
   ImageSourcePropType,
-  FlatList,
-  Pressable,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import Fajr from "@assets/images/fajr.png";
@@ -20,9 +17,9 @@ import NextPrayer, {
   neededDate,
   neededPrayerTimes,
 } from "@Functions/NextPrayer";
-import { Link } from "expo-router";
-import { FontAwesome } from "@expo/vector-icons";
+import { Tabs } from "expo-router";
 import Header from "@Components/Header";
+import { useIsFocused } from "@react-navigation/native";
 // import { username } from "./index";
 
 interface Prayer {
@@ -130,28 +127,10 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingTop: 40,
   },
-  header: {
-    width: "100%",
-    position: "absolute",
-    top: 0,
-    flexDirection: "row",
-    marginTop: 40,
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  welcome: {
-    fontSize: 20,
-    alignSelf: "flex-end",
-    fontFamily: "CairoRegular",
-    fontWeight: "600",
-    color: "white",
-  },
   heading: {
     fontSize: 30,
     color: "white",
-    fontFamily: "CairoRegular",
-    fontWeight: "600",
-    marginTop: 40,
+    fontFamily: "Bold_Font",
   },
   date: {
     width: "100%",
@@ -163,8 +142,7 @@ const styles = StyleSheet.create({
     padding: 15,
   },
   dateText: {
-    fontFamily: "CairoRegular",
-    fontWeight: "600",
+    fontFamily: "semiBold_Font",
     fontSize: 20,
     padding: 5,
   },
@@ -173,9 +151,9 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     justifyContent: "center",
     alignItems: "center",
-    gap: 10,
-    padding: 10,
-    marginVertical: 20,
+    gap: 15,
+    padding: 15,
+    marginVertical: 30,
     borderRadius: 25,
   },
   prayer: {
@@ -191,7 +169,7 @@ const styles = StyleSheet.create({
     width: 70,
     height: 70,
     borderRadius: 999,
-    marginHorizontal: 10,
+    marginHorizontal: 15,
   },
   icon: {
     width: 40,
@@ -203,13 +181,11 @@ const styles = StyleSheet.create({
     borderRadius: 99,
   },
   prayerName: {
-    fontFamily: "CairoRegular",
-    fontWeight: "600",
+    fontFamily: "Medium_Font",
     fontSize: 20,
   },
   prayerTime: {
-    fontFamily: "CairoRegular",
-    fontWeight: "600",
+    fontFamily: "Medium_Font",
     fontSize: 14,
   },
 });

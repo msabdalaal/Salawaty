@@ -135,13 +135,13 @@ const styles = StyleSheet.create({
   },
   logoText: {
     color: "white",
-    fontFamily: "CairoRegular",
+    fontFamily: "Regular_Font",
     fontWeight: "600",
     fontSize: 30,
   },
   heading: {
     color: "white",
-    fontFamily: "CairoRegular",
+    fontFamily: "Regular_Font",
     fontWeight: "600",
     fontSize: 20,
     marginTop: 20,
@@ -152,7 +152,7 @@ const styles = StyleSheet.create({
     textShadowRadius: 3,
   },
   textInput: {
-    fontFamily: "CairoRegular",
+    fontFamily: "Regular_Font",
     fontWeight: "600",
     backgroundColor: "white",
     height: 50,
@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
   },
   errorText: {
     marginTop: 20,
-    fontFamily: "CairoRegular",
+    fontFamily: "Regular_Font",
     fontWeight: "600",
     color: "white",
     textAlign: "center",
@@ -179,14 +179,14 @@ const styles = StyleSheet.create({
     width: 200,
   },
   buttonText: {
-    fontFamily: "CairoRegular",
+    fontFamily: "Regular_Font",
     fontWeight: "600",
     textAlign: "center",
     color: "white",
   },
   LinkText: {
     marginTop: 10,
-    fontFamily: "CairoRegular",
+    fontFamily: "Regular_Font",
     fontWeight: "600",
     textAlign: "center",
     color: "white",

@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 25,
     color: "white",
-    fontFamily: "CairoRegular",
+    fontFamily: "Regular_Font",
     fontWeight: "600",
   },
   goBack: {
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
   searchBar: {
     width: "100%",
     fontSize: 16,
-    fontFamily: "CairoRegular",
+    fontFamily: "Regular_Font",
     fontWeight: "600",
     backgroundColor: "white",
     borderRadius: 25,
@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
     color: "white",
     marginVertical: 20,
     fontSize: 18,
-    fontFamily: "CairoRegular",
+    fontFamily: "Regular_Font",
     fontWeight: "600",
   },
 });

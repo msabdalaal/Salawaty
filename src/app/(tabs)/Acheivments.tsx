@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
   heading: {
     fontSize: 30,
     color: "white",
-    fontFamily: "CairoRegular",
+    fontFamily: "Regular_Font",
     fontWeight: "600",
   },
 });

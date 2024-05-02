@@ -5,6 +5,7 @@ import {
   initializeAuth,
 } from "firebase/auth";
 import ReactNativeAsyncStorage from "@react-native-async-storage/async-storage";
+import { Platform } from "react-native";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCKrPdfrTof7MER0lqdrDtA07M_E_gIeqw",
@@ -15,19 +16,17 @@ const firebaseConfig = {
   appId: "1:329429310126:web:76d9868dea929206c86b3f",
 };
 
-// Initialize Firebase
 if (initializeApp(firebaseConfig) !== null) {
   const app = initializeApp(firebaseConfig);
-  const auth = initializeAuth(app, {
-    persistence: getReactNativePersistence(ReactNativeAsyncStorage),
-  });
+  let auth;
+  if (Platform.OS === "web") {
+  } else {
+    // React Native-specific initialization
+    auth = initializeAuth(app, {
+      persistence: getReactNativePersistence(ReactNativeAsyncStorage),
+    });
+  }
 }
 
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
-
-// const auth = initializeAuth(app, {
-//   persistence: getReactNativePersistence(ReactNativeAsyncStorage)
-// });
-
-// Initialize Firebase Authentication and get a reference to the service

@@ -1,36 +1,39 @@
-import React, { useState, useEffect } from "react";
-import { useLogin } from "../providers/LoginProvider";
+// import { useState, useEffect } from "react";
+// import { useLogin } from "../providers/LoginProvider";
+// import { getDataLocally, storeDataLocally } from "@Functions/localStorage";
 
-function PrayerTimesFetcher(): string[] | null {
-  const [prayerTimes, setPrayerTimes] = useState<string[] | null>(null);
-  const { city, country } = useLogin();
+// function PrayerTimesFetcher(): string[] | null {
+//   const [prayerTimes, setPrayerTimes] = useState<string[] | null>(null);
+//   const { city, country } = useLogin();
 
-  useEffect(() => {
-    if (city) {
-      const fetchPrayerTimes = async () => {
-        try {
-          console.log(
-            `https://api.aladhan.com/v1/timingsByAddress/today?address=${city},${country}`
-          );
+//   useEffect(() => {
+//     if (city) {
+//       const fetchPrayerTimes = async () => {
+//         try {
+//           const response = await fetch(
+//             `https://api.aladhan.com/v1/timingsByAddress/today?address=${city},${country}`
+//           );
+//           if (!response.ok) {
+//             try {
+//               const data = await getDataLocally("PrayerTimeFetch");
+//               setPrayerTimes(data.timings);
+//             } catch {
+//               throw new Error("Connect to Internet");
+//             }
+//           }
+//           const data = await response.json();
+//           setPrayerTimes(data.data.timings);
+//           storeDataLocally(data.data,"PrayerTimeFetch")
+//         } catch (error) {}
+//       };
 
-          const response = await fetch(
-            `https://api.aladhan.com/v1/timingsByAddress/today?address=${city},${country}`
-          );
-          if (!response.ok) {
-            throw new Error("Failed to fetch data");
-          }
-          const data = await response.json();
-          setPrayerTimes(data.data.timings);
-        } catch (error) {}
-      };
+//       fetchPrayerTimes();
 
-      fetchPrayerTimes();
+//       return () => {};
+//     }
+//   }, [city]);
 
-      return () => {};
-    }
-  }, [city]);
+//   return prayerTimes;
+// }
 
-  return prayerTimes;
-}
-
-export default PrayerTimesFetcher;
+// export default PrayerTimesFetcher;

@@ -5,8 +5,6 @@ import {
   Pressable,
   Platform,
   Alert,
-  Modal,
-  AppState,
 } from "react-native";
 import { useState, useEffect } from "react";
 import { AntDesign } from "@expo/vector-icons";
@@ -18,7 +16,6 @@ import { doc, setDoc, getDoc } from "firebase/firestore";
 import { useLogin } from "../providers/LoginProvider";
 import Header from "@Components/Header";
 import TimeRemaining from "@Components/TimeRemaining";
-
 export interface prayersDone {
   [salah: string]: {
     [type: string]: boolean;
@@ -101,6 +98,7 @@ export default function HomeScreen(this: any) {
   async function storeData(data: object, dataPath: string) {
     await setDoc(doc(db, dataPath, `${uid}`), data);
   }
+
   const handleChangePrayer = (salah: any, type: any) => {
     const data: prayersDone = {
       ...prayersDone,
@@ -160,7 +158,7 @@ export default function HomeScreen(this: any) {
   return (
     <LinearGradient colors={["#3EC0E9", "#347589"]} style={styles.container}>
       <Header />
-      <Text style={[styles.heading, { marginTop: 40 }]}>الصلاة القادمة</Text>
+      <Text style={styles.heading}>الصلاة القادمة</Text>
       <View style={styles.whiteContainer}>
         {city != "" ? (
           <>
@@ -207,7 +205,7 @@ export default function HomeScreen(this: any) {
         </View>
         <View style={styles.tableRow}>
           <View style={[styles.tableCell, styles.firstCol]}>
-            <Text style={[styles.cellText, styles.firstColText]}>الصبح</Text>
+            <Text style={[styles.cellText, styles.firstColText]}>الفجر</Text>
           </View>
           <Pressable
             onPress={() => handleChangePrayer("fajr", "jamaah")}
@@ -354,35 +352,27 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "space-around",
+    justifyContent: "center",
     padding: 20,
     paddingTop: 40,
   },
   heading: {
     fontSize: 30,
     color: "white",
-    fontFamily: "CairoRegular",
-    fontWeight: "600",
+    fontFamily: "Bold_Font",
+    marginVertical: 20,
   },
   whiteContainer: {
     backgroundColor: "white",
-    margin: 20,
-    padding: 25,
+    padding: 15,
     borderRadius: 25,
     width: "100%",
   },
   containerHeading: {
     fontSize: 30,
-    fontFamily: "CairoRegular",
-    fontWeight: "600",
-  },
-  timeRemaining: {
-    fontSize: 20,
-    marginTop: 15,
-    fontFamily: "CairoRegular",
+    fontFamily: "semiBold_Font",
   },
   table: {
-    marginTop: 20,
     width: "100%",
   },
   tableCell: {
@@ -397,8 +387,8 @@ const styles = StyleSheet.create({
   cellText: {
     textAlign: "center",
     verticalAlign: "bottom",
-    fontFamily: "CairoRegular",
-    fontWeight: "600",
+    fontFamily: "Regular_Font",
+    fontSize: 20,
   },
   checkMarkBackground: {
     width: "100%",
@@ -458,11 +448,11 @@ const styles = StyleSheet.create({
   },
   buttonPosition: {
     position: "absolute",
-    top: "52%",
+    top: "50%",
     right: 5,
   },
   buttonText: {
-    fontFamily: "CairoRegular",
+    fontFamily: "Regular_Font",
     fontWeight: "600",
     textAlign: "center",
     color: "white",

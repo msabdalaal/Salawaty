@@ -1,11 +1,9 @@
 import { StyleSheet, Pressable, Dimensions } from "react-native";
 import { Text, View } from "@Components/Themed";
 import { LinearGradient } from "expo-linear-gradient";
-import { Link, Stack, router } from "expo-router";
-import { FontAwesome } from "@expo/vector-icons";
+import { Stack, router } from "expo-router";
 import DatePicker from "react-native-modern-datepicker";
 import { SetStateAction, useEffect, useState } from "react";
-
 import * as Progress from "react-native-progress";
 import db from "@/app/db/firestore";
 import { doc, getDoc } from "firebase/firestore";
@@ -97,30 +95,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     padding: 20,
-    paddingTop: 40,
-  },
-  header: {
-    position: "absolute",
-    backgroundColor: "transparent",
-    top: 0,
-    marginTop: 40,
-    width: "100%",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
+    paddingTop: 80,
   },
   heading: {
     fontSize: 30,
     color: "white",
-    fontFamily: "CairoRegular",
-    fontWeight: "600",
-  },
-  welcome: {
-    fontSize: 20,
-    alignSelf: "flex-end",
-    fontFamily: "CairoRegular",
-    fontWeight: "600",
-    color: "white",
+    fontFamily: "Bold_Font",
   },
   followTable: {
     marginTop: 20,

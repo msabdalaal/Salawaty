@@ -48,15 +48,14 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   welcome: {
-    fontSize: 20,
+    fontSize: 22,
     alignSelf: "flex-end",
-    fontFamily: "CairoRegular",
-    fontWeight: "600",
+    fontFamily: "semiBold_Font",
     color: "white",
   },
   profilePic: {
     width: 50,
     height: 50,
     borderRadius: 99,
-  },
+  }, 
 });

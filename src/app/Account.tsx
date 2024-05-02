@@ -235,7 +235,7 @@ const styles = StyleSheet.create({
   username: {
     fontSize: 25,
     color: "white",
-    fontFamily: "CairoRegular",
+    fontFamily: "Regular_Font",
     fontWeight: "600",
   },
   changeUsernameInput: {
@@ -253,7 +253,7 @@ const styles = StyleSheet.create({
     color: "white",
     marginVertical: 20,
     fontSize: 18,
-    fontFamily: "CairoRegular",
+    fontFamily: "Regular_Font",
     fontWeight: "600",
   },
 });

@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLogin } from "../providers/LoginProvider";
+import { getDataLocally, storeDataLocally } from "./localStorage";
+import NetInfo from "@react-native-community/netinfo";
 
 interface PrayerTimes {
   [Salah: string]: string;
@@ -15,25 +17,43 @@ export const PrayerTimes = () => {
   const [prayerTimes, setPrayerTimes] = useState<PrayerTimes>();
   const [date, setDate] = useState();
   const { city, country } = useLogin();
+
   useEffect(() => {
     if (city) {
       const fetchPrayerTimes = async () => {
-        try {
-          const response = await fetch(
-            `https://api.aladhan.com/v1/timingsByAddress/today?address=${city},${country}`
-          );
-          if (!response.ok) {
-            throw new Error("Failed to fetch data");
+        const networkState = await NetInfo.fetch();
+        if (networkState.isConnected && networkState.isInternetReachable) {
+          try {
+            const response = await fetch(
+              `https://api.aladhan.com/v1/timingsByAddress/today?address=${city},${country}`
+            );
+            if (response.ok) {
+              const data = await response.json();
+              setPrayerTimes(data.data.timings);
+              setDate(data.data.date);
+              storeDataLocally(data.data, "PrayerTimings");
+            } else throw new Error("API request not successful");
+          } catch (error) {}
+        } else {
+          try {
+            const localData = await getDataLocally("PrayerTimings");
+            if (localData) {
+              setPrayerTimes(localData.timings);
+              setDate(localData.date);
+              return localData; // Use local data if available
+            } else {
+              throw new Error("No local data available");
+            }
+          } catch (localError) {
+            alert("Please connect to the internet");
+            throw localError; // If both API and local storage fail, throw the error
           }
-          const data = await response.json();
-          setPrayerTimes(data.data.timings);
-          setDate(data.data.date);
-        } catch (error) {}
+        }
       };
       fetchPrayerTimes();
-      return () => {};
     }
-    }, [city]);
+    return () => {};
+  }, [city]);
 
   const neededPrayerTimes: neededPrayerTimes = {
     Fajr: prayerTimes ? prayerTimes["Fajr"] : null,
@@ -72,12 +92,12 @@ const NextPrayer = (): [string | null, string] => {
     return hours * 60 + minutes;
   }
 
-  const timeString = "10:35";
-  const timeInMinutes = timeStringToMinutes(timeString);
+  // const timeString = "10:35";
+  // const timeInMinutes = timeStringToMinutes(timeString);
 
   let nextPrayer = 0;
   let nextPrayerName: string = "Fajr";
-  let nextPrayerTime = "";
+  // let nextPrayerTime = "";
   Object.values(neededPrayerTimes).map((value, id) => {
     if (timeStringToMinutes(value || "") < currentTimeInMinutes) {
       nextPrayer = id;
@@ -117,7 +137,7 @@ const NextPrayer = (): [string | null, string] => {
     neededPrayerTimes[nextPrayerName],
     arabicNextPrayerName,
   ];
-  return  output;
+  return output;
 };
 
 export default NextPrayer;
