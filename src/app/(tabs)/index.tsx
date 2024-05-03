@@ -3,10 +3,8 @@ import {
   Text,
   View,
   Pressable,
-  Platform,
-  Alert,
 } from "react-native";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { AntDesign } from "@expo/vector-icons";
 import { Redirect } from "expo-router";
 import NextPrayer from "../Functions/NextPrayer";
@@ -16,6 +14,9 @@ import { doc, setDoc, getDoc } from "firebase/firestore";
 import { useLogin } from "../providers/LoginProvider";
 import Header from "@Components/Header";
 import TimeRemaining from "@Components/TimeRemaining";
+import { getDataLocally, storeDataLocally } from "@Functions/localStorage";
+import NetInfo from "@react-native-community/netinfo";
+
 export interface prayersDone {
   [salah: string]: {
     [type: string]: boolean;
@@ -37,8 +38,9 @@ export function CheckMark() {
 
 export default function HomeScreen(this: any) {
   const { loggedin, uid, city } = useLogin();
-
   const [nextPrayerTime, nextPrayerName] = NextPrayer();
+  const hasPageBeenRendered = useRef(false);
+
   const [prayersDone, setPrayersDone] = useState<prayersDone>({
     fajr: {
       jamaah: false,
@@ -75,8 +77,6 @@ export default function HomeScreen(this: any) {
     },
   });
 
-  const [showSave, setShowSave] = useState(false);
-
   const Month = new Date().getMonth() + 1;
   const Year = new Date().getFullYear();
   const Day = new Date().getDate();
@@ -92,12 +92,26 @@ export default function HomeScreen(this: any) {
   }
 
   useEffect(() => {
-    if (uid) getData();
+    const getPrayersData = async () => {
+      const networkState = await NetInfo.fetch();
+      if (networkState.isConnected && networkState.isInternetReachable) {
+        if (uid) getData();
+      } else getDataLocally(`${today}`);
+    };
+    getPrayersData();
   }, [uid]);
 
   async function storeData(data: object, dataPath: string) {
     await setDoc(doc(db, dataPath, `${uid}`), data);
   }
+
+  useEffect(() => {
+    if (hasPageBeenRendered.current) {
+      storeData(prayersDone, `${today}`);
+      storeDataLocally(prayersDone, `${today}`);
+    }
+    hasPageBeenRendered.current = true;
+  }, [prayersDone]);
 
   const handleChangePrayer = (salah: any, type: any) => {
     const data: prayersDone = {
@@ -128,28 +142,6 @@ export default function HomeScreen(this: any) {
     }
 
     setPrayersDone(data);
-    setShowSave(true);
-  };
-
-  const handleSavePrayers = () => {
-    if (Platform.OS == "android") {
-      Alert.alert("تأكيد الحفظ", "هل تريد الحفظ ؟", [
-        {
-          text: "لا",
-          style: "destructive",
-        },
-        {
-          text: "نعم",
-          onPress: () => {
-            storeData(prayersDone, `${today}`);
-            setShowSave(false);
-          },
-        },
-      ]);
-    } else if (confirm("هل تريد الحفظ ؟")) {
-      storeData(prayersDone, `${today}`);
-      setShowSave(false);
-    }
   };
 
   if (!loggedin) {
@@ -331,19 +323,6 @@ export default function HomeScreen(this: any) {
           </Pressable>
         </View>
       </View>
-      {showSave && (
-        <Pressable
-          style={[styles.buttonPosition, styles.boxShadow]}
-          onPress={handleSavePrayers}
-        >
-          <LinearGradient
-            colors={["#2D7A93", "#1E596B", "#1C4D5C"]}
-            style={styles.buttonStyle}
-          >
-            <Text style={styles.buttonText}>save</Text>
-          </LinearGradient>
-        </Pressable>
-      )}
     </LinearGradient>
   );
 }

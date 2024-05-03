@@ -11,7 +11,7 @@ import duhr from "@assets/images/duhr.png";
 import asr from "@assets/images/asr.png";
 import maghrib from "@assets/images/maghrib.png";
 import ishaa from "@assets/images/ishaa.png";
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import NextPrayer, {
   PrayerTimes,
   neededDate,
@@ -20,7 +20,9 @@ import NextPrayer, {
 import { Tabs } from "expo-router";
 import Header from "@Components/Header";
 import { useIsFocused } from "@react-navigation/native";
+import { SchedulePrayersNotifications } from "@Functions/schedulePrayersNotifications";
 // import { username } from "./index";
+import * as Notifications from "expo-notifications";
 
 interface Prayer {
   icon: ImageSourcePropType;
@@ -70,7 +72,22 @@ const Prayer: FC<Prayer> = (props): JSX.Element => {
 
 export default function PrayerTimesScreen() {
   const neededPrayerTimes: neededPrayerTimes = PrayerTimes()[0];
+
   const neededDate: neededDate = PrayerTimes()[1];
+
+  // async function logScheduledNotifications() {
+  //   const scheduledNotifications =
+  //     await Notifications.getAllScheduledNotificationsAsync();
+  //   console.log("Scheduled Notifications:", scheduledNotifications);
+  // }
+
+  // logScheduledNotifications();
+
+  SchedulePrayersNotifications("Fajr", neededPrayerTimes.Fajr!);
+  SchedulePrayersNotifications("Dhuhr", neededPrayerTimes.Dhuhr!);
+  SchedulePrayersNotifications("Asr", neededPrayerTimes.Asr!);
+  SchedulePrayersNotifications("Maghrib", neededPrayerTimes.Maghrib!);
+  SchedulePrayersNotifications("Isha", neededPrayerTimes.Isha!);
 
   return (
     <LinearGradient colors={["#3EC0E9", "#347589"]} style={styles.container}>

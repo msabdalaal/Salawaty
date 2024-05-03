@@ -7,6 +7,8 @@ import { CheckMark, prayersDone } from "..";
 import { LinearGradient } from "expo-linear-gradient";
 import { FontAwesome } from "@expo/vector-icons";
 import { useLogin } from "@/app/providers/LoginProvider";
+import { getDataLocally } from "@Functions/localStorage";
+import NetInfo from "@react-native-community/netinfo";
 
 const DayDetailScreen = () => {
   const { uid } = useLogin();
@@ -63,7 +65,13 @@ const DayDetailScreen = () => {
   }
 
   useEffect(() => {
-    getData();
+    const getPrayersData = async () => {
+      const networkState = await NetInfo.fetch();
+      if (networkState.isConnected && networkState.isInternetReachable) {
+        if (uid) getData();
+      } else getDataLocally(`${date}`);
+    };
+    getPrayersData();
   }, []);
 
   function goBack() {

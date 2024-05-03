@@ -1,37 +1,12 @@
 import { Text, StyleSheet } from "react-native";
 import { useEffect, useState } from "react";
 import NextPrayer from "@Functions/NextPrayer";
-import * as Notifications from "expo-notifications";
-import { useLogin } from "@/app/providers/LoginProvider";
-
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: true,
-    shouldSetBadge: true,
-  }),
-});
 
 export default function TimeRemaining() {
   const [nextPrayerTime, nextPrayerName] = NextPrayer();
-  // let [remainingHours, remainingMinutes] = timeRemaning(nextPrayerTime);
   const [hours, setHours] = useState<number>(0);
   const [minutes, setMinutes] = useState<number>(0);
   const [seconds, setSeconds] = useState<number>(0);
-  const { city } = useLogin();
-  const generateNotification = async () => {
-    //show the notification to the user
-    Notifications.scheduleNotificationAsync({
-      //set the content of the notification
-      content: {
-        title: `حان موعد آذان ${nextPrayerName}`,
-        body: `بالتوقيت المحلي لمدينة ${city}`,
-        sound: "../assets/sound/takbeer.mp3",
-      },
-      trigger: null,
-    });
-  };
-  let flag: boolean;
 
   useEffect(() => {
     if (nextPrayerTime) {
@@ -46,10 +21,6 @@ export default function TimeRemaining() {
         setHours(remainingHours);
         setMinutes(remainingMinutes);
         setSeconds(remainingSeconds);
-        if (remainingMinutes > 0) flag = false;
-        if (remainingHours == 0 && remainingMinutes == 0 && flag == false)
-          flag = true;
-        generateNotification();
       }, 1000);
 
       return () => clearInterval(interval);
