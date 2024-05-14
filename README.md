@@ -5,7 +5,7 @@
 <p id="description">The best Muslim Companion for tracking prayers.</p>
 
 <h2>Project Screenshots:</h2>
-
+<p float="left">
 <img src="https://github.com/msabdalaal/Salawaty/blob/main/Screenshots/photo_2024-05-14_11-21-14-portrait.png?raw=true" alt="project-screenshot" width="148" height="274/">
 
 <img src="https://github.com/msabdalaal/Salawaty/blob/main/Screenshots/photo_2024-05-14_11-21-12-portrait.png?raw=true" alt="project-screenshot" width="148" height="274/">
@@ -13,6 +13,8 @@
 <img src="https://github.com/msabdalaal/Salawaty/blob/main/Screenshots/photo_2024-05-14_11-21-11-portrait.png?raw=true" alt="project-screenshot" width="148" height="274/">
 
 <img src="https://github.com/msabdalaal/Salawaty/blob/main/Screenshots/photo_2024-05-14_11-21-09-portrait.png?raw=true" alt="project-screenshot" width="148" height="274/">
+</p>
+
 
   
   
