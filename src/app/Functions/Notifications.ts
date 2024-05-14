@@ -92,7 +92,7 @@ export async function schedulePushNotification(
   body: string,
   time: number
 ) {
-//   console.log("hello");
+  //   console.log("hello");
 
   const notificationTime = new Date();
   //   var days = [
@@ -117,7 +117,7 @@ export async function schedulePushNotification(
       repeats: false,
     },
   });
-//   console.log("notif id on scheduling", id, title);
+  //   console.log("notif id on scheduling", id, title);
   return id;
 }
 

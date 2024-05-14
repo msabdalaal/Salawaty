@@ -76,6 +76,7 @@ export default function HomeScreen(this: any) {
       isDone: false,
     },
   });
+  
 
   const Month = new Date().getMonth() + 1;
   const Year = new Date().getFullYear();
@@ -375,10 +376,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#6FBDD6",
+
   },
   checkMark: {
     color: "white",
     fontSize: 40,
+    
   },
 
   tableRow: {
