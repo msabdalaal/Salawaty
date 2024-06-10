@@ -1,34 +1,15 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  ImageSourcePropType,
-} from "react-native";
+import { StyleSheet, Text, View, Image } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import Fajr from "@assets/images/fajr.png";
 import duhr from "@assets/images/duhr.png";
 import asr from "@assets/images/asr.png";
 import maghrib from "@assets/images/maghrib.png";
 import ishaa from "@assets/images/ishaa.png";
-import { FC, useEffect } from "react";
-import NextPrayer, {
-  PrayerTimes,
-  neededDate,
-  neededPrayerTimes,
-} from "@Functions/NextPrayer";
-import { Tabs } from "expo-router";
+import { FC } from "react";
+import NextPrayer, { PrayerTimes } from "@/app/Functions/NextPrayer";
+import { neededDate, neededPrayerTimes, prayer } from "@/app/types";
 import Header from "@Components/Header";
-import { useIsFocused } from "@react-navigation/native";
-import { SchedulePrayersNotifications } from "@Functions/schedulePrayersNotifications";
-// import { username } from "./index";
-import * as Notifications from "expo-notifications";
-
-interface Prayer {
-  icon: ImageSourcePropType;
-  prayerTime: neededPrayerTimes[""];
-  name: string;
-}
+import Notifications from "@Functions/Notifications";
 
 function convertTo12HourFormat(time: string | null): string {
   if (!time) return "";
@@ -51,44 +32,30 @@ function convertTo12HourFormat(time: string | null): string {
   return time12HourFormat;
 }
 
-const Prayer: FC<Prayer> = (props): JSX.Element => {
-  const time12 = convertTo12HourFormat(props.prayerTime);
-  return (
-    <View style={styles.prayer}>
-      <LinearGradient
-        colors={["#2D7A93", "#1E596B", "#1C4D5C"]}
-        style={[
-          styles.iconContainer,
-          NextPrayer()[1] == props.name ? styles.iconStroked : null,
-        ]}
-      >
-        <Image resizeMode="contain" source={props.icon} style={styles.icon} />
-      </LinearGradient>
-      <Text style={styles.prayerName}>{props.name}</Text>
-      <Text style={styles.prayerTime}>{time12}</Text>
-    </View>
-  );
-};
-
 export default function PrayerTimesScreen() {
   const neededPrayerTimes: neededPrayerTimes = PrayerTimes()[0];
 
   const neededDate: neededDate = PrayerTimes()[1];
 
-  // async function logScheduledNotifications() {
-  //   const scheduledNotifications =
-  //     await Notifications.getAllScheduledNotificationsAsync();
-  //   console.log("Scheduled Notifications:", scheduledNotifications);
-  // }
-
-  // logScheduledNotifications();
-
-  SchedulePrayersNotifications("Fajr", neededPrayerTimes.Fajr!);
-  SchedulePrayersNotifications("Dhuhr", neededPrayerTimes.Dhuhr!);
-  SchedulePrayersNotifications("Asr", neededPrayerTimes.Asr!);
-  SchedulePrayersNotifications("Maghrib", neededPrayerTimes.Maghrib!);
-  SchedulePrayersNotifications("Isha", neededPrayerTimes.Isha!);
-
+  const Prayer: FC<prayer> = (props): JSX.Element => {
+    const time12 = convertTo12HourFormat(props.prayerTime);
+    return (
+      <View style={styles.prayer}>
+        <LinearGradient
+          colors={["#2D7A93", "#1E596B", "#1C4D5C"]}
+          style={[
+            styles.iconContainer,
+            NextPrayer()[1] == props.name ? styles.iconStroked : null,
+          ]}
+        >
+          <Image resizeMode="contain" source={props.icon} style={styles.icon} />
+        </LinearGradient>
+        <Text style={styles.prayerName}>{props.name}</Text>
+        <Text style={styles.prayerTime}>{time12}</Text>
+      </View>
+    );
+  };
+  
   return (
     <LinearGradient colors={["#3EC0E9", "#347589"]} style={styles.container}>
       <Header />

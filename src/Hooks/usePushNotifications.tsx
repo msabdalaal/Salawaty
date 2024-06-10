@@ -6,10 +6,7 @@ import Constants from "expo-constants";
 
 import { Platform } from "react-native";
 
-export interface PushNotificationState {
-  expoPushToken?: Notifications.ExpoPushToken;
-  notification?: Notifications.Notification;
-}
+import { PushNotificationState } from "@/app/types";
 
 export const usePushNotifications = (): PushNotificationState => {
   Notifications.setNotificationHandler({

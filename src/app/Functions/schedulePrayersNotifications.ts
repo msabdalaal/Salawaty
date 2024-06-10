@@ -2,6 +2,9 @@ import Notification from "@Functions/Notifications";
 import { schedulePushNotification } from "@Functions/Notifications";
 import { useEffect } from "react";
 import { useLogin } from "../providers/LoginProvider";
+import { PrayerTimes } from "./NextPrayer";
+import { neededPrayerTimes } from "@/app/types";
+import { getAllScheduledNotificationsAsync } from "expo-notifications"
 
 const Month = new Date().getMonth() + 1;
 const Year = new Date().getFullYear();
@@ -26,9 +29,6 @@ function secondsUntilTime(timeString: string) {
   return Math.floor(diffInSeconds); // Return the floor of the difference in seconds
 }
 
-// Example usage:
-// Outputs the number of seconds until 14:23 today, or -1 if it's already past
-
 export const SchedulePrayersNotifications = (
   prayer: string,
   timeString: string
@@ -50,4 +50,23 @@ export const SchedulePrayersNotifications = (
       }
     }
   }, [timeString]);
+};
+
+export const useSchedulePrayersNotifications = () => {
+  const neededPrayerTimes: neededPrayerTimes = PrayerTimes()[0];
+
+  SchedulePrayersNotifications("Fajr", neededPrayerTimes.Fajr!);
+  SchedulePrayersNotifications("Dhuhr", neededPrayerTimes.Dhuhr!);
+  SchedulePrayersNotifications("Asr", neededPrayerTimes.Asr!);
+  SchedulePrayersNotifications("Maghrib", neededPrayerTimes.Maghrib!);
+  SchedulePrayersNotifications("Isha", neededPrayerTimes.Isha!);
+
+  // async function logScheduledNotifications() {
+  //   const scheduledNotifications =
+  //     await getAllScheduledNotificationsAsync();
+  //   console.log("Scheduled Notifications:", scheduledNotifications);
+  // }
+
+  // logScheduledNotifications();
+
 };

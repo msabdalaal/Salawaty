@@ -11,20 +11,7 @@ import {
 import db from "../db/firestore";
 import { getDataLocally, storeDataLocally } from "@Functions/localStorage";
 import NetInfo from "@react-native-community/netinfo";
-
-type LoginType = {
-  loggedin: boolean;
-  profilePic: string | null;
-  displayName: string | null;
-  uid: string | null;
-  country: string | null;
-  city: string | null;
-  changeLogin: (state: boolean) => void;
-  changeCountry: (country: string | null) => void;
-  changeCity: (city: string | null) => void;
-  changeDisplayName: (displayName: string | null) => void;
-  changeProfilePic: (url: string | null) => void;
-};
+import { LoginType } from "@/app/types";
 
 export const LoginContext = createContext<LoginType>({
   loggedin: false,

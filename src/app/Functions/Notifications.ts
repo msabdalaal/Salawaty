@@ -1,4 +1,4 @@
-import { SetStateAction, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as Notifications from "expo-notifications";
 import {} from "expo-notifications";
 import { isDevice } from "expo-device";
@@ -65,9 +65,7 @@ export default function Notification() {
       });
 
     responseListenerRef.current =
-      Notifications.addNotificationResponseReceivedListener((response) => {
-        // console.log(response);
-      });
+      Notifications.addNotificationResponseReceivedListener((response) => {});
 
     return () => {
       if (notificationListenerRef.current) {
@@ -92,19 +90,8 @@ export async function schedulePushNotification(
   body: string,
   time: number
 ) {
-  //   console.log("hello");
-
   const notificationTime = new Date();
-  //   var days = [
-  //     "Sunday",
-  //     "Monday",
-  //     "Tuesday",
-  //     "Wednesday",
-  //     "Thursday",
-  //     "Friday",
-  //     "Saturday",
-  //   ];
-  //   const weekday = days.indexOf(day) + 1;
+
   const id = await Notifications.scheduleNotificationAsync({
     identifier,
     content: {
@@ -117,7 +104,6 @@ export async function schedulePushNotification(
       repeats: false,
     },
   });
-  //   console.log("notif id on scheduling", id, title);
   return id;
 }
 

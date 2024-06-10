@@ -3,18 +3,13 @@ import { useEffect, useState } from "react";
 import NextPrayer from "@Functions/NextPrayer";
 
 export default function TimeRemaining() {
-  const [nextPrayerTime, nextPrayerName] = NextPrayer();
+  let [nextPrayerTime, nextPrayerName] = NextPrayer();
   const [hours, setHours] = useState<number>(0);
   const [minutes, setMinutes] = useState<number>(0);
   const [seconds, setSeconds] = useState<number>(0);
 
   useEffect(() => {
     if (nextPrayerTime) {
-      let [remainingHours, remainingMinutes, remainingSeconds] =
-        timeRemaning(nextPrayerTime);
-      setHours(remainingHours);
-      setMinutes(remainingMinutes);
-      setSeconds(remainingSeconds);
       const interval = setInterval(() => {
         let [remainingHours, remainingMinutes, remainingSeconds] =
           timeRemaning(nextPrayerTime);
@@ -29,6 +24,8 @@ export default function TimeRemaining() {
 
   return (
     <>
+      <Text style={styles.containerHeading}>صلاة، {nextPrayerName}</Text>
+
       <Text style={[styles.timeRemaining, { marginTop: 20 }]}>
         الوقت المتبقي:
       </Text>
@@ -40,6 +37,10 @@ export default function TimeRemaining() {
 }
 
 const styles = StyleSheet.create({
+  containerHeading: {
+    fontSize: 30,
+    fontFamily: "semiBold_Font",
+  },
   timeRemaining: {
     fontSize: 20,
     fontFamily: "semiBold_Font",

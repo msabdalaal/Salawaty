@@ -1,9 +1,4 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  Pressable,
-} from "react-native";
+import { StyleSheet, Text, View, Pressable } from "react-native";
 import { useState, useEffect, useRef } from "react";
 import { AntDesign } from "@expo/vector-icons";
 import { Redirect } from "expo-router";
@@ -16,12 +11,8 @@ import Header from "@Components/Header";
 import TimeRemaining from "@Components/TimeRemaining";
 import { getDataLocally, storeDataLocally } from "@Functions/localStorage";
 import NetInfo from "@react-native-community/netinfo";
-
-export interface prayersDone {
-  [salah: string]: {
-    [type: string]: boolean;
-  };
-}
+import { useSchedulePrayersNotifications } from "@Functions/schedulePrayersNotifications";
+import { prayersDone } from "@/app/types";
 
 export function CheckMark() {
   return (
@@ -76,7 +67,6 @@ export default function HomeScreen(this: any) {
       isDone: false,
     },
   });
-  
 
   const Month = new Date().getMonth() + 1;
   const Year = new Date().getFullYear();
@@ -148,6 +138,9 @@ export default function HomeScreen(this: any) {
   if (!loggedin) {
     return <Redirect href="../Login" />;
   }
+
+  useSchedulePrayersNotifications();
+
   return (
     <LinearGradient colors={["#3EC0E9", "#347589"]} style={styles.container}>
       <Header />
@@ -155,7 +148,6 @@ export default function HomeScreen(this: any) {
       <View style={styles.whiteContainer}>
         {city != "" ? (
           <>
-            <Text style={styles.containerHeading}>صلاة، {nextPrayerName}</Text>
             <TimeRemaining />
           </>
         ) : (
@@ -376,12 +368,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#6FBDD6",
-
   },
   checkMark: {
     color: "white",
     fontSize: 40,
-    
   },
 
   tableRow: {

@@ -2,19 +2,10 @@ import { useEffect, useState } from "react";
 import { useLogin } from "../providers/LoginProvider";
 import { getDataLocally, storeDataLocally } from "./localStorage";
 import NetInfo from "@react-native-community/netinfo";
-
-interface PrayerTimes {
-  [Salah: string]: string;
-}
-export interface neededPrayerTimes {
-  [Salah: string]: string | null;
-}
-export interface neededDate {
-  [date: string]: string | null;
-}
+import { prayerTimes, neededPrayerTimes, neededDate } from "@/app/types";
 
 export const PrayerTimes = () => {
-  const [prayerTimes, setPrayerTimes] = useState<PrayerTimes>();
+  const [prayerTimes, setPrayerTimes] = useState<prayerTimes>();
   const [date, setDate] = useState();
   const { city, country } = useLogin();
 

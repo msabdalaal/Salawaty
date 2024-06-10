@@ -21,7 +21,6 @@ if (initializeApp(firebaseConfig) !== null) {
   let auth;
   if (Platform.OS === "web") {
   } else {
-    // React Native-specific initialization
     auth = initializeAuth(app, {
       persistence: getReactNativePersistence(ReactNativeAsyncStorage),
     });
